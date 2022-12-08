@@ -29,4 +29,19 @@ class UserProfileController extends Controller
     {
         return $this->skillLists->listSkills();
     }
+
+    public function userDetails()
+    {
+        $user = \App\Models\User::where('id', 1)->first();
+        $details = [
+            'firstname' => $user->firstname,
+            'lastname' => $user->lastname,
+            'about' => $user->about,
+            'numberOfDays' => $user->numberOfDays,
+            'workType' => $user->workType
+        ];
+
+        return $details;
+
+    }
 }

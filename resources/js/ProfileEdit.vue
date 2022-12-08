@@ -27,19 +27,25 @@
                         </div>
 
                         <div class="row mt-2">
-                            <div class="col-md-6" id="firstname">First name<input type="text" class="form-control"
-                                    placeholder="first name" v-model="formData.firstname"></div>
+                            {{ formData }}
+                            <div class="col-md-6" id="firstname">First name
+
+                                <input type="text" class="form-control" id="fname" placeholder="first name"
+                                    v-model="formData.firstname" disabled>
+                            </div>
                             <span v-for="error in v$.firstname.$errors" :key="error.$uid" class="error-red">
                                 {{ error.$message }}
                             </span>
+
                             <div class="col-md-6">Last name
-                                <input type="text" v-model="formData.lastname" class="form-control" placeholder="Doe">
+                                <input type="text" v-model="formData.lastname" id="lname" class="form-control"
+                                    placeholder="Doe" disabled>
                             </div>
 
                             <span v-for="error in v$.lastname.$errors" :key="error.$uid" class="error-red">
                                 {{ error.$message }}
                             </span>
-
+                            <a href="#" @click.prevent="enableEditing">enable editing</a>
                         </div>
 
                         <div class="row mt-3">
@@ -54,10 +60,9 @@
                             <div class="col-md-6">
                                 <label class="checkbox-inline">
                                     <li v-for="(day, index) in days" key="index">
-                                        <input type="checkbox" v-model="formData.numberOfDays" :value="day.name">
+                                        <input type="checkbox" v-model="formData.numberOfDays">
                                         {{ day.name }}
                                     </li>
-                                    {{ formData.numberOfDays }}
                                 </label>
                                 <span v-for="error in v$.numberOfDays.$errors" :key="error.$uid" class="error-red">
                                     {{ error.$message }}
@@ -192,7 +197,7 @@
                                                     class="bv-no-focus-ring">
                                                     <div class="custom-control custom-control-inline custom-checkbox">
                                                         <input type="checkbox" name="worktypes-checkbox-group"
-                                                            class="custom-control-input" value="1"
+                                                            class="custom-control-input" value="freelancer"
                                                             v-model="formData.workType" id="__BVID__21"><label
                                                             class="custom-control-label" for="__BVID__21">
                                                             Freelancer
@@ -200,7 +205,7 @@
                                                     </div>
                                                     <div class="custom-control custom-control-inline custom-checkbox">
                                                         <input type="checkbox" name="worktypes-checkbox-group"
-                                                            class="custom-control-input" value="2"
+                                                            class="custom-control-input" value="employee"
                                                             v-model="formData.workType" id="__BVID__22"><label
                                                             class="custom-control-label" for="__BVID__22">
                                                             Employee
@@ -208,7 +213,7 @@
                                                     </div>
                                                     <div class="custom-control custom-control-inline custom-checkbox">
                                                         <input type="checkbox" name="worktypes-checkbox-group"
-                                                            class="custom-control-input" value="3"
+                                                            class="custom-control-input" value="temp"
                                                             v-model="formData.workType" id="__BVID__23"><label
                                                             class="custom-control-label" for="__BVID__23">
                                                             Temp
@@ -216,7 +221,7 @@
                                                     </div>
                                                     <div class="custom-control custom-control-inline custom-checkbox">
                                                         <input type="checkbox" name="worktypes-checkbox-group"
-                                                            class="custom-control-input" value="4"
+                                                            class="custom-control-input" value="intern"
                                                             v-model="formData.workType" id="__BVID__24"><label
                                                             class="custom-control-label" for="__BVID__24">
                                                             Intern
@@ -248,15 +253,17 @@
                                             <div class="skilltype-title">
                                                 Programming Languages
                                             </div>
-                                           
-                                           
+
+
                                             <div class="d-inline-block">
 
-                                                <div >
-                                                    <button v-for="(programming, index) in userBasedSkillList.programming" type="button" aria-pressed="false" autocomplete="off"
+                                                <div>
+                                                    <button
+                                                        v-for="(programming, index) in userBasedSkillList.programming"
+                                                        type="button" aria-pressed="false" autocomplete="off"
                                                         class="btn skill-btn btn-outline-secondary btn-sm"
                                                         style="display: inline-block;">
-                                                        {{programming}}
+                                                        {{ programming }}
                                                     </button>
                                                 </div>
                                             </div>
@@ -268,10 +275,11 @@
                                                 <!---->
                                             </div>
                                             <div class="d-inline-block">
-                                                <div><button v-for="(framework, index) in userBasedSkillList.framework" type="button" aria-pressed="false" autocomplete="off"
+                                                <div><button v-for="(framework, index) in userBasedSkillList.framework"
+                                                        type="button" aria-pressed="false" autocomplete="off"
                                                         class="btn skill-btn btn-outline-secondary btn-sm"
                                                         style="display: inline-block;">
-                                                        {{framework}}
+                                                        {{ framework }}
                                                     </button></div>
                                             </div>
                                         </div>
@@ -280,80 +288,14 @@
                                                 Operating Systems
                                             </div>
                                             <div class="d-inline-block">
-                                                <!---->
-                                            </div>
-                                            <div class="d-inline-block">
-                                                <!---->
-                                            </div>
-                                            <div class="d-inline-block">
-                                                <!---->
-                                            </div>
-                                            <div class="d-inline-block">
-                                                <!---->
-                                            </div>
-                                            <div class="d-inline-block">
-                                                <!---->
-                                            </div>
-                                            <div class="d-inline-block">
-                                                <!---->
-                                            </div>
-                                            <div class="d-inline-block">
-                                                <!---->
-                                            </div>
-                                            <div class="d-inline-block">
-                                                <!---->
-                                            </div>
-                                            <div class="d-inline-block">
-                                                <!---->
-                                            </div>
-                                            <div class="d-inline-block">
-                                                <!---->
-                                            </div>
-                                            <div class="d-inline-block">
-                                                <!---->
-                                            </div>
-                                            <div class="d-inline-block">
-                                                <!---->
-                                            </div>
-                                            <div class="d-inline-block">
-                                                <!---->
-                                            </div>
-                                            <div class="d-inline-block">
-                                                <!---->
-                                            </div>
-                                            <div class="d-inline-block">
-                                                <!---->
-                                            </div>
-                                            <div class="d-inline-block">
-                                                <!---->
-                                            </div>
-                                            <div class="d-inline-block">
-                                                <!---->
-                                            </div>
-                                            <div class="d-inline-block">
-                                                <!---->
-                                            </div>
-                                            <div class="d-inline-block">
-                                                <!---->
-                                            </div>
-                                            <div class="d-inline-block">
-                                                <!---->
-                                            </div>
-                                            <div class="d-inline-block">
-                                                <!---->
-                                            </div>
-                                            <div class="d-inline-block">
-                                                <!---->
-                                            </div>
-                                            <div class="d-inline-block">
                                                 <div><button type="button" aria-pressed="false" autocomplete="off"
                                                         class="btn skill-btn btn-outline-secondary btn-sm"
                                                         style="display: inline-block;">
                                                         Linux
                                                     </button></div>
                                             </div>
-                                         
-                                           
+
+
                                             <div class="d-inline-block">
                                                 <div><button type="button" aria-pressed="false" autocomplete="off"
                                                         class="btn skill-btn btn-outline-secondary btn-sm"
@@ -368,13 +310,13 @@
                                                         Android
                                                     </button></div>
                                             </div>
-                                            
+
                                         </div>
                                         <div class="skilltype-group">
                                             <div class="skilltype-title">
                                                 Business
                                             </div>
-                                            
+
                                             <div class="d-inline-block">
                                                 <div><button type="button" aria-pressed="false" autocomplete="off"
                                                         class="btn skill-btn btn-outline-secondary btn-sm"
@@ -410,7 +352,7 @@
                                                         Design
                                                     </button></div>
                                             </div>
-                                           
+
                                             <div class="d-inline-block">
                                                 <div><button type="button" aria-pressed="false" autocomplete="off"
                                                         class="btn skill-btn btn-outline-secondary btn-sm"
@@ -509,7 +451,7 @@
                                                         Tagalog
                                                     </button></div>
                                             </div>
-                                            
+
                                             <div class="d-inline-block">
                                                 <div><button type="button" aria-pressed="false" autocomplete="off"
                                                         class="btn skill-btn btn-outline-secondary btn-sm"
@@ -517,7 +459,7 @@
                                                         Kubernetes
                                                     </button></div>
                                             </div>
-                                            
+
                                             <div class="d-inline-block">
                                                 <div><button type="button" aria-pressed="false" autocomplete="off"
                                                         class="btn skill-btn btn-outline-secondary btn-sm"
@@ -609,7 +551,7 @@
                                                         Hadoop
                                                     </button></div>
                                             </div>
-                                            
+
                                             <div class="d-inline-block">
                                                 <div><button type="button" aria-pressed="false" autocomplete="off"
                                                         class="btn skill-btn btn-outline-secondary btn-sm"
@@ -617,13 +559,13 @@
                                                         Azure
                                                     </button></div>
                                             </div>
-                                            
+
                                         </div>
                                         <div class="skilltype-group">
                                             <div class="skilltype-title">
                                                 Databases
                                             </div>
-                                           
+
                                             <div class="d-inline-block">
                                                 <div><button type="button" aria-pressed="false" autocomplete="off"
                                                         class="btn skill-btn btn-outline-secondary btn-sm"
@@ -638,7 +580,7 @@
                                                         MySQL
                                                     </button></div>
                                             </div>
-                                            
+
                                             <div class="d-inline-block">
                                                 <div><button type="button" aria-pressed="false" autocomplete="off"
                                                         class="btn skill-btn btn-outline-secondary btn-sm"
@@ -646,8 +588,8 @@
                                                         MongoDB
                                                     </button></div>
                                             </div>
-                                            
-                                            
+
+
                                             <div class="d-inline-block">
                                                 <div><button type="button" aria-pressed="false" autocomplete="off"
                                                         class="btn skill-btn btn-outline-secondary btn-sm"
@@ -655,7 +597,7 @@
                                                         PostgreSQL
                                                     </button></div>
                                             </div>
-                                            
+
                                             <div class="d-inline-block">
                                                 <div><button type="button" aria-pressed="false" autocomplete="off"
                                                         class="btn skill-btn btn-outline-secondary btn-sm"
@@ -719,7 +661,7 @@
                                                         Couchbase
                                                     </button></div>
                                             </div>
-                                            
+
                                             <div class="d-inline-block">
                                                 <div><button type="button" aria-pressed="false" autocomplete="off"
                                                         class="btn skill-btn btn-outline-secondary btn-sm"
@@ -824,24 +766,26 @@
                                 <div class="row w-100">
                                     <div class="col-md-6">
                                         <div class="pl-4 ml-1 custom-control custom-checkbox">
-                                            <input v-model="formData.workPreference"
-                                                id="checkbox_is_remote" type="checkbox" name="checkbox_is_remote"
-                                                aria-required="true" class="custom-control-input" value="remote"><label
+                                            <input v-model="formData.workPreference" id="checkbox_is_remote"
+                                                type="checkbox" name="checkbox_is_remote" aria-required="true"
+                                                class="custom-control-input" value="remote"><label
                                                 for="checkbox_is_remote" class="custom-control-label">
                                                 Remote
-                                            </label></div>
+                                            </label>
+                                        </div>
                                         <div class="p-1" style="min-width: 80px;">Timezone:</div> <select
                                             name="remote_timezone_id" class="custom-select custom-select-sm"
                                             id="__BVID__30">
                                             <option value="0">Any</option>
                                             <option value="1">Africa/Abidjan</option>
-                                            
+
                                         </select>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="pl-4 ml-1 custom-control custom-checkbox"><input v-model="formData.workPreference"
-                                                id="checkbox_is_physical" type="checkbox" name="checkbox_is_physical"
-                                                aria-required="true" class="custom-control-input" value="onsite"><label
+                                        <div class="pl-4 ml-1 custom-control custom-checkbox"><input
+                                                v-model="formData.workPreference" id="checkbox_is_physical"
+                                                type="checkbox" name="checkbox_is_physical" aria-required="true"
+                                                class="custom-control-input" value="onsite"><label
                                                 for="checkbox_is_physical" class="custom-control-label">
                                                 On Site
                                             </label></div>
@@ -849,7 +793,7 @@
                                             name="physical_country_id" class="custom-select custom-select-sm"
                                             id="__BVID__32">
                                             <option value="1">Afghanistan</option>
-                                            
+
                                         </select>
                                     </div>
                                 </div>
@@ -878,7 +822,7 @@
                                 <div class="row w-100">
                                     <div class="col-md"><select name="experience"
                                             class="w-25 custom-select custom-select-sm" id="__BVID__34">
-                                           
+
                                             <option value="50">50+ years</option>
                                         </select></div>
                                 </div>
@@ -908,7 +852,7 @@
                                     <div class="col-md"><select name="compensation"
                                             class="w-25 custom-select custom-select-sm" id="__BVID__36">
                                             <option value="0">$0K+ / year</option>
-                                           
+
                                             <option value="500">$500K+ / year</option>
                                         </select></div>
                                 </div>
@@ -961,7 +905,7 @@ const days = ref([
         name: 'Tuesday'
     },
 ]);
-
+const fn = ref('');
 const formData = ref({
     firstname: '',
     lastname: '',
@@ -969,8 +913,9 @@ const formData = ref({
     numberOfDays: [],
     workType: [],
     workPreference: [],
-    skills: ['1','2','5']
+    skills: ['1', '2', '5']
 })
+
 const onlyString = () => {
 
 }
@@ -1024,7 +969,25 @@ onMounted(() => {
     }).catch((error) => {
         alert('error in fetching skills')
     })
+
+    getUserDetails()
 })
+
+const getUserDetails = () => {
+    axios.get('/user/detials').then((response) => {
+        formData.value.firstname = response.data.firstname
+        formData.value.lastname = response.data.lastname
+        formData.value.about = response.data.about
+        formData.value.numberOfDays = response.data.numberOfDays
+        formData.value.workType = response.data.workType
+        console.log(response.data)
+    });
+}
+
+const enableEditing = () => {
+    document.getElementById('fname').disabled = false;
+    document.getElementById('lname').disabled = false;
+}
 
 const updateProfilePicture = (e) => {
     status.value = true
@@ -1044,26 +1007,35 @@ const updateProfilePicture = (e) => {
 }
 
 .loader {
-  border: 16px solid #f3f3f3;
-  border-radius: 50%;
-  border-top: 2px solid blue;
-  border-right: 2px solid green;
-  border-bottom: 2px solid red;
-  border-left: 2px solid pink;
-  width: 30px;
-  height: 30px;
-  -webkit-animation: spin 2s linear infinite;
-  animation: spin 2s linear infinite;
+    border: 16px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 2px solid blue;
+    border-right: 2px solid green;
+    border-bottom: 2px solid red;
+    border-left: 2px solid pink;
+    width: 30px;
+    height: 30px;
+    -webkit-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
 }
 
 @-webkit-keyframes spin {
-  0% { -webkit-transform: rotate(0deg); }
-  100% { -webkit-transform: rotate(360deg); }
+    0% {
+        -webkit-transform: rotate(0deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(360deg);
+    }
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
+    0% {
+        transform: rotate(0deg);
+    }
 
+    100% {
+        transform: rotate(360deg);
+    }
+}
 </style>

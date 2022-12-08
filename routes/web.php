@@ -27,6 +27,7 @@ Route::get('design', [TalentFilterController::class, 'design']);
 
 Route::post('/user/profile', [UserProfileController::class, 'store']);
 Route::get('/userbased-skills', [UserProfileController::class, 'findSkillListsForloggedInUser']);
+Route::get('/user/detials', [UserProfileController::class, 'userDetails']);
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
