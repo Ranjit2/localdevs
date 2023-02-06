@@ -1,182 +1,251 @@
 <template>
     <div class="row">
+        <div class="col-md-4">
+            <!-- Checkbox filters -->
+            <h3>Talent:</h3>
+            <div v-for="item in talents">
+                <input type="radio" :value="item.id" v-model="filters.dev" @change="getUsers" />
+                {{ item.name }}
+            </div>
+
+            <h3>Work Preference:</h3>
+            <div v-for="item in wpreference">
+                <input type="checkbox" :value="item.id" v-model="filters.preference" @change="getUsers" />
+                {{ item.name }}
+            </div>
+
+            <h3>Skills:</h3>
+            <div v-for="item in skillSet">
+                <input type="checkbox" :value="item.id" v-model="filters.skill" @change="getUsers" />
+                {{ item.name }}
+            </div>
+
+            <h3>Place:</h3>
+            <div v-for="item in places">
+                <input type="checkbox" :value="item.id" v-model="filters.place" @change="getUsers" />
+                {{ item.name }}
+            </div>
+
+
+            <h3>Experience:</h3>
+            <div v-for="item in experience">
+                <input type="radio" :value="item.exp" v-model="filters.experience" @change="getUsers" />
+                {{ item.name }}
+            </div>
+        </div>
 
         <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">Talents</div>
-                <div class="card-body">
-                    <div class="mt-2 col-md-12" v-for="(user, index) in users" :key="index">
-                        <div class="card" style="border-radius: 15px;">
-                            <div class="card-body p-4">
-                                <div class="d-flex text-black">
-                                    <div class="flex-shrink-0">
-                                        <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-1.webp"
-                                            alt="Generic placeholder image" class="img-fluid"
-                                            style="width: 180px; border-radius: 10px;">
-                                    </div>
-                                    <div class="flex-grow-1 ms-3">
-                                        <h5 class="mb-1"> {{ user.name }}</h5>
-                                        <p class="mb-2 pb-1" style="color: #2b2a2a;">Senior Software Enginner @Microsoft
-                                        </p>
-                                        <span class="font-medium text-success fs-5 mt-2">
-                                            15+ experience education sector, tech-business-product background,
-                                            early-to-late
-                                            stage
-                                            experience, hands-on
-                                        </span>
-                                        <hr>
-                                        <p>Hello. 👋🏽 I'm Luna. I’m a problem solver who has 10+ years experience with
-                                            research
-                                            to
-                                            drive strategy. My expertise is mostly research but for the past years
-                                            digital
-                                            products
-                                            discovery and validation have been my life. I can easily map pain points and
-                                            synthesize
-                                            useful insights. I am a...</p>
-                                        <div class="skills p-2">
-                                            <span v-for="(skill, index) in user.skills" :key="index"
-                                                class="badge text-bg-primary p-2" style="margin-left: 3px;;"> {{ skill.
-        name
-                                                }}</span>
-                                        </div>
-                                        <div class="d-flex justify-content-start rounded-3 p-2 mb-2 mt-2"
-                                            style="background-color: #efefef;">
-                                            <div>
-                                                <p class="small text-muted mb-1">Articles</p>
-                                                <p class="mb-0">41</p>
-                                            </div>
-                                            <div class="px-3">
-                                                <p class="small text-muted mb-1">Followers</p>
-                                                <p class="mb-0">976</p>
-                                            </div>
-                                            <div>
-                                                <p class="small text-muted mb-1">Rating</p>
-                                                <p class="mb-0">8.5</p>
-                                            </div>
-                                        </div>
-                                        <div class="d-flex pt-1">
-                                            <router-link :to =" '/profile/' + user.id " class="btn btn-secondary flex-grow-1">View profile</router-link>&nbsp;
-                                            <button type="button" class="btn btn-primary flex-grow-1">Save</button>
-                                        </div>
-                                    </div>
-                                </div>
+            <div v-if="loading">
+                Loading...<div class="spinner"></div>
+            </div>
+            <p v-if="users.length < 1">
+                No users for this skill set found.
+            </p>
+            <div class="card mt-2" v-for="user in users">
+                <div class="card-header d-flex align-items-center">
+                    <div class="avatar-wrapper mr-3">
+                        <div class="lazyload-wrapper">
+                            <div class="cui-avatar-image mentor-avatar">
+                                <img alt="Stefan Georg, Django engineer and developer" title="Stefan Georg" width="100"
+                                    src="https://cdn.mentorcruise.com/cache/2130ff23a0944ccbaf462a36d793d42c/f4bb925524ce287f/342975b7377a6875aa85de0a13fa4733.jpg"
+                                    class="img-fluid">
+                                <h3>{{ user.firstname }}&nbsp;{{ user.lastname }}</h3>
                             </div>
+                            <p v-for="(skill, index) in user.skills" :key="index" class="badge text-bg-primary p-2"
+                                style="margin-left: 3px;;"> {{
+                                    skill.
+                                        name
+                                }}</p>
+                            <p class="font-medium text-success fs-5 mt-2">
+                                15+ experience education sector, tech-business-product background,
+                                early-to-late
+                                stage
+                                experience, hands-on
+                            </p>
                         </div>
+                    </div>
+                    <div class="name-wrapper">
+
+                        <a :href="'talent/' + user.slug"><button class="btn btn-primary">View Profile</button></a>
+
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-header">
-                    Filter
-                </div>
-                <div class="card-body">
-                    <Filter />
-                </div>
+            <br>
+            <div v-if="pagination.last_page > 1">
+                <button class="btn btn-primary" @click="previousPage"
+                    :disabled="pagination.current_page == 1">Previous</button>&nbsp;
+                <button class="btn btn-primary" @click="nextPage"
+                    :disabled="pagination.next_page_url == null">Next</button>
             </div>
         </div>
-        
     </div>
+    <button @click="resetFilters" class="btn btn-danger">Reset filter</button>
 </template>
+<script>
 
-<script setup>
-import Filter from "./Filter.vue";
-import axios from "axios";
-import { ref, onMounted, watch } from "vue";
-import { useRoute, useRouter } from 'vue-router'
+export default {
+    data() {
+        return {
+            initialPageMounted: true,
+            loading: false,
+            skillSet: [],
+            wpreference: [
+                {
+                    id: "onsite",
+                    name: "Onsite",
+                },
+                {
+                    id: "wfh",
+                    name: "Remote",
+                },
 
-const route = useRoute()
-const router = useRouter()
+            ],
+            //radio
+            talents: [
+                {
+                    id: "frontend",
+                    name: "Designer",
+                },
 
-const topics = ref([]);
-const users = ref([]);
-const showDropDown = ref('');
-const isLoading = ref(false);
+                {
+                    id: "backend",
+                    name: "Developer",
+                },
+                {
+                    id: "motion",
+                    name: "Motion",
+                },
+                {
+                    id: "motion",
+                    name: "Motion",
+                },
+                {
+                    id: "pm",
+                    name: "Project Manager",
+                },
+                {
+                    id: "",
+                    name: "clear",
+                },
+            ],
+            //checkbox
+            places: [
+                {
+                    id: 1,
+                    name: "Jhapa",
+                },
 
-const getTopics = (query) => {
-    axios
-        .post("filter/talents", { filters: query })
-        .then((response) => {
-            users.value = response.data;
-            isLoading.value = false
-        });
-}
-watch(
-    () => {
+                {
+                    id: 2,
+                    name: "Morang",
+                },
+            ],
+            //checkbox
+            experience: [
+                {
+                    id: 1,
+                    exp: "1-3",
+                    name: "1 to 3 years",
+                },
+                {
+                    id: 2,
+                    exp: "3-6",
+                    name: "3 to 6 years",
+                },
+                {
+                    id: 3,
+                    exp: "6",
+                    name: "More than 6 years",
+                },
+                {
+                    id: 4,
+                    exp: "",
+                    name: "clear",
+                },
+            ],
+            users: [],
+            filters: JSON.parse(localStorage.getItem("filters")) || {
+                dev: "",
+                preference: [],
+                experience: [],
+                place: [],
+                skill: []
+            },
+            pagination: JSON.parse(localStorage.getItem("pagination")) || {},
+        };
+    },
+    mounted() {
+        this.getUsers();
+        this.skillLists();
+    },
+    methods: {
+        skillLists() {
+            axios.get("/skills").then((response) => {
+                this.skillSet = response.data;
+            });
+        },
 
-        if (route.query.preference == "wfh") {
-            const { place, ...to } = route.query;
-            // $router.replace({ query: to });
+        getUsers() {
+            this.loading = true;
+            axios
+                .get("/filter/talents", { params: { filters: this.filters, page: this.pagination.current_page || 1 } })
+                .then(response => {
+                    this.users = response.data.data;
+                    this.pagination = response.data;
+                    localStorage.setItem("filters", JSON.stringify(this.filters));
+                    localStorage.setItem("pagination", JSON.stringify(this.pagination));
+                    if (!this.initialPageMounted) {
+                        history.pushState(
+                            {},
+                            null,
+                            `?page=${this.pagination.current_page}&dev=${this.filters.dev}&preference=${this.filters.preference
+                            }&experience=${this.filters.experience}&place=${this.filters.place}&skill=${this.filters.skill
+                            }`
+                        );
+                    } else {
+                        this.initialPageMounted = false;
+                    }
+                    this.loading = false;
+                });
+        },
+        resetFilters() {
+            this.filters = { dev: '', place: [], preference: [], experience: [], skill: [] };
+            this.pagination = { page: 1 }
+            this.getUsers();
+        },
+        nextPage() {
+            if (this.pagination.current_page < this.pagination.last_page) {
+                this.pagination.current_page++;
+                this.getUsers();
+            }
+        },
+        previousPage() {
+            if (this.pagination.current_page > 1) {
+                this.pagination.current_page--;
+                this.getUsers();
+            }
         }
-        getTopics(route.query)
-    })
-
-const dropdownFunction = (userId) => {
-    showDropDown.value = userId;
-
-}
-const closeBox = () => {
-    showDropDown.value = false;
-}
-onMounted(() => {
-    getTopics(route.query);
-    console.log('query:', route.query)
-
-})
-
-
-
-// export default {
-//     data() {
-//         return {
-//             topics: [],
-//             users: [],
-//             showDropDown: '',
-//             isLoading: false
-//         };
-//     },
-//     components: {
-//         Filter,
-//     },
-//     watch: {
-//         $route(to, from) {
-//             if (this.$route.query.preference == "wfh") {
-//                 const { place, ...to } = this.$route.query;
-//                 this.$router.replace({ query: to });
-//                 //this.$router.replace({query: {'my_query': 1}});
-//             }
-//             console.log('url',this.$route.query);
-//             this.getTopics(this.$route.query);
-//         },
-//     },
-//     methods: {
-//         getTopics(query) {
-//             console.log('final',query);
-//             this.isLoading = true
-//             axios
-//                 .post("filter/talents", { filters: query })
-//                 .then((response) => {
-//                     this.users = response.data;
-//                     this.isLoading = false
-//                 });
-//             //send query to endpoint
-//             // this.topics.push(query);
-//         },
-//         dropdownFunction(userId) {
-//             this.showDropDown = userId;
-
-//         },
-//         closeBox() {
-//             this.showDropDown = false;
-//         }
-
-//     },
-//     mounted() {
-//         console.log('q',this.$route.query)
-//         this.getTopics(this.$route.query);
-//     },
-// };
-
+    }
+};
 </script>
+<style>
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #ddd;
+    border-top: 4px solid #3498db;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+</style>

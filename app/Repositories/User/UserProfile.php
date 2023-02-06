@@ -16,7 +16,7 @@ class UserProfile {
     public function store(array $data)
     {
        // dd(implode(",",$data['workType']));
-        $user = $this->user->find(1);
+        $user = $this->user->find(auth()->id());
         
         //days table to store monday, tues ...sun 
         //pivot table store user_id and days_id 
@@ -24,18 +24,16 @@ class UserProfile {
 
         //join loggedIn userid and days and look from pivot table and get days 
         // need logic here
-
-        
         $this->user->where('id', $user->id)->update([
             'firstname' => $data['firstname'],
             'lastname' => $data['lastname'],
             'about' => $data['about'],
-            //'availableDays' => implode(",",$data['numberOfDays']),
+            'availableDays' => implode(",",$data['availableDays']),
             'workType' => implode(",",$data['workType']),
-            'workPreference' => implode(",",$data['workPreference'])
+            'workPreference' => implode(",",$data['workPreference']),
         ]);
 
-        $user->skills()->sync($data['skills']);
+        $user->skills()->syncWithoutDetaching($data['userSelectedSkills']);
     }
 
     public function edit()

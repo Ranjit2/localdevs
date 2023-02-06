@@ -21,13 +21,15 @@
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <div class="d-flex flex-row align-items-center back"><i
                                     class="fa fa-long-arrow-left mr-1 mb-1"></i>
-                                <h6>Back to home</h6>
+                                <h6>Back to Profile</h6>
                             </div>
                             <h6 class="text-right">Edit Profile</h6>
                         </div>
 
                         <div class="row mt-2">
                             {{ formData }}
+                            <hr>
+                            {{ formData.userBasedSkillList  }}
                             <div class="col-md-6" id="firstname">First name
 
                                 <input type="text" class="form-control" id="fname" placeholder="first name"
@@ -60,11 +62,15 @@
                             <div class="col-md-6">
                                 <label class="checkbox-inline">
                                     <li v-for="(day, index) in days" key="index">
-                                        <input type="checkbox" v-model="formData.numberOfDays">
-                                        {{ day.name }}
+                                        <input type="checkbox" v-model="formData.availableDays" 
+                                        :value="day.name"
+                                        :id="index"
+                                        :checked="formData.availableDays.includes(day.name)"
+                                        >
+                                        <span id="index">{{ day.name }}</span>
                                     </li>
                                 </label>
-                                <span v-for="error in v$.numberOfDays.$errors" :key="error.$uid" class="error-red">
+                                <span v-for="error in v$.availableDays.$errors" :key="error.$uid" class="error-red">
                                     {{ error.$message }}
                                 </span>
                             </div>
@@ -105,12 +111,19 @@
                                     <div class="col-md d-flex">
                                         <div id="fieldset-github" role="group" class="form-group flex-fill">
                                             <!---->
-                                            <div class="bv-no-focus-ring"><input id="input-github" name="github"
+                                            <div class="bv-no-focus-ring">
+                                                <input id="input-github" name="github" v-model="formData.github"
+                                                    @keyup="formData.github"
                                                     type="text" placeholder="https://github.com/" class="form-control">
                                                 <div tabindex="-1" role="alert" aria-live="assertive" aria-atomic="true"
                                                     class="invalid-feedback">Please enter a GitHub handle.</div>
                                                 <!---->
                                                 <!---->
+
+                                                <p style="color:red" v-if="githubFiledErrorMessage&&formData.github.length > 3">{{ githubFiledErrorMessage }}</p>
+                                                <span v-for="error in v$.github.$errors" :key="error.$uid" class="error-red">
+                                    {{ error.$message }}
+                                </span>
                                             </div>
                                         </div>
                                     </div>
@@ -185,7 +198,7 @@
                         <hr>
                         <div class="row profile-row">
                             <div class="col-md-2 fw-form-label">
-                                Work Types *
+                                Work Types *{{ formData.workType }}
                             </div>
                             <div class="col-md-10 d-flex flex-wrap align-content-center">
                                 <div class="row w-100">
@@ -197,6 +210,7 @@
                                                     class="bv-no-focus-ring">
                                                     <div class="custom-control custom-control-inline custom-checkbox">
                                                         <input type="checkbox" name="worktypes-checkbox-group"
+                                                            checked="formData.workType.includes('freelancer')"
                                                             class="custom-control-input" value="freelancer"
                                                             v-model="formData.workType" id="__BVID__21"><label
                                                             class="custom-control-label" for="__BVID__21">
@@ -205,6 +219,7 @@
                                                     </div>
                                                     <div class="custom-control custom-control-inline custom-checkbox">
                                                         <input type="checkbox" name="worktypes-checkbox-group"
+                                                        checked="formData.workType.includes('employee')"
                                                             class="custom-control-input" value="employee"
                                                             v-model="formData.workType" id="__BVID__22"><label
                                                             class="custom-control-label" for="__BVID__22">
@@ -213,6 +228,7 @@
                                                     </div>
                                                     <div class="custom-control custom-control-inline custom-checkbox">
                                                         <input type="checkbox" name="worktypes-checkbox-group"
+                                                            checked="formData.workType.includes('temp')"
                                                             class="custom-control-input" value="temp"
                                                             v-model="formData.workType" id="__BVID__23"><label
                                                             class="custom-control-label" for="__BVID__23">
@@ -221,6 +237,7 @@
                                                     </div>
                                                     <div class="custom-control custom-control-inline custom-checkbox">
                                                         <input type="checkbox" name="worktypes-checkbox-group"
+                                                            checked="formData.workType.includes('intern')"
                                                             class="custom-control-input" value="intern"
                                                             v-model="formData.workType" id="__BVID__24"><label
                                                             class="custom-control-label" for="__BVID__24">
@@ -250,14 +267,21 @@
                                     <!---->
                                     <div tabindex="-1" role="group" class="bv-no-focus-ring">
                                         <div class="skilltype-group">
-                                            <div class="skilltype-title">
+                                            <div class="skilltype-title" v-if="userBasedSkillList.programming">
                                                 Programming Languages
                                             </div>
-
-
-                                            <div class="d-inline-block">
-
+                                            <div class="d-inline-block" v-if="userBasedSkillList.programming">
                                                 <div>
+                                                    {{ formData.userSelectedSkills }}
+                                                    <input 
+                                                    type="checkbox" 
+                                                    v-model="formData.userSelectedSkills"
+                                                    v-for="(programming, index) in userBasedSkillList.programming"
+                                                    :checked="formData.userSelectedSkills.includes(programming)"
+                                                    :value="index"
+                                                    />
+                                                     {{ programming }}
+                                                    
                                                     <button
                                                         v-for="(programming, index) in userBasedSkillList.programming"
                                                         type="button" aria-pressed="false" autocomplete="off"
@@ -268,13 +292,21 @@
                                                 </div>
                                             </div>
 
-                                            <div class="skilltype-title">
+                                            <div class="skilltype-title" v-if="userBasedSkillList.framework">
                                                 Frameworks
                                             </div>
                                             <div class="d-inline-block">
                                                 <!---->
                                             </div>
-                                            <div class="d-inline-block">
+                                            <input 
+                                            type="checkbox"
+                                            v-model="formData.userSelectedSkills"
+                                            v-for="(framework, index) in userBasedSkillList.framework"
+                                            :checked="formData.userSelectedSkills.includes(framework)"
+                                            :value="index"
+                                            />
+                                                     {{ framework }}
+                                            <div class="d-inline-block" v-if="userBasedSkillList.framework">
                                                 <div><button v-for="(framework, index) in userBasedSkillList.framework"
                                                         type="button" aria-pressed="false" autocomplete="off"
                                                         class="btn skill-btn btn-outline-secondary btn-sm"
@@ -282,6 +314,23 @@
                                                         {{ framework }}
                                                     </button></div>
                                             </div>
+
+                                            <div class="skilltype-title" v-if="userBasedSkillList.motion">
+                                                Motion
+                                            </div>
+                                            <div class="d-inline-block">
+                                                <!---->
+                                            </div>
+                                            <div class="d-inline-block" v-if="userBasedSkillList.motion">
+                                                <div><button v-for="(framework, index) in userBasedSkillList.motion"
+                                                        type="button" aria-pressed="false" autocomplete="off"
+                                                        class="btn skill-btn btn-outline-secondary btn-sm"
+                                                        style="display: inline-block;">
+                                                        {{ framework }}
+                                                    </button></div>
+                                            </div>
+
+
                                         </div>
                                         <div class="skilltype-group">
                                             <div class="skilltype-title">
@@ -882,6 +931,7 @@ const files = ref([]);
 const myImage = ref(null)
 const previewImage = ref('')
 const status = ref(false)
+const githubFiledErrorMessage = ref('')
 const userBasedSkillList = ref([])
 
 
@@ -890,7 +940,7 @@ const containsUser = (value) => {
 }
 
 const mustIncludeOne = () => {
-    if (formData.numberOfDays.length > 0) {
+    if (formData.availableDays.length > 0) {
         return true;
     }
 }
@@ -904,22 +954,62 @@ const days = ref([
         id: 2,
         name: 'Tuesday'
     },
+    {
+        id: 3,
+        name: 'Wednesday'
+    },
+    {
+        id: 4,
+        name: 'Thursday'
+    },
+    {
+        id: 5,
+        name: 'Friday'
+    },
+    {
+        id: 6,
+        name: 'Saturday'
+    },
+    {
+        id: 7,
+        name: 'Sunday'
+    },
 ]);
 const fn = ref('');
 const formData = ref({
     firstname: '',
     lastname: '',
     about: '',
-    numberOfDays: [],
+    github:'',
+    availableDays: [],
     workType: [],
     workPreference: [],
-    skills: ['1', '2', '5']
+    skills: [],
+    userSelectedSkills:[]
 })
 
 const onlyString = () => {
 
 }
+const checkGithub = () =>  {
+    if(formData.value.github!='') {
+        if(formData.value.github.includes('github.com')) {
+            githubFiledErrorMessage.value = ''
+            return true;
+        } else {
+            githubFiledErrorMessage.value = 'Please provide your Github profile link.'
+            return false;
+        }
+        
+    }
+    githubFiledErrorMessage.value = '';
+    return true;
+}
+
 const rules = {
+    github:{
+        checkGithub
+    },
     firstname: {
         required
         //required:helpers.regex(/^([^0-9]*)$/)
@@ -935,7 +1025,7 @@ const rules = {
         required,
         minLength: minLength(2)
     },
-    numberOfDays: {
+    availableDays: {
         required: helpers.withMessage('Your availability must be atleast one day', required),
         // minLength: minLength(2), //min lenght is fine, can remove mustIncludeOne
         // mustIncludeOne
@@ -966,8 +1056,9 @@ const formOnSubmit = async () => {
 onMounted(() => {
     axios.get('/userbased-skills').then((response) => {
         userBasedSkillList.value = response.data
+        console.log('skill', response.data)
     }).catch((error) => {
-        alert('error in fetching skills')
+        console.log('error in fetching skills',error)
     })
 
     getUserDetails()
@@ -978,8 +1069,9 @@ const getUserDetails = () => {
         formData.value.firstname = response.data.firstname
         formData.value.lastname = response.data.lastname
         formData.value.about = response.data.about
-        formData.value.numberOfDays = response.data.numberOfDays
+        formData.value.availableDays = response.data.availableDays
         formData.value.workType = response.data.workType
+        formData.value.userSelectedSkills = response.data.skills
         console.log(response.data)
     });
 }

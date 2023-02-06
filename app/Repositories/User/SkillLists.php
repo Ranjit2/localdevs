@@ -15,31 +15,45 @@ class SkillLists
         $this->skill = $skill;
     }
 
+    //this list the skills based on user expeeertise. if user is a developer show only developer skills.
     public function listSkills(): Response
     {
         $skillListsArrayForProgramming = [];
         $skillListsArrayForFrameworks = [];
-        $userExpertise = 'developer'; //auth()->user->expertise;
+        $skillListsArrayForMotion = [];
+        $userExpertise = auth()->user()->expertise; //auth()->user->expertise;
 
-        $skillListsProgramming =  $this->skill::whereRaw('JSON_CONTAINS(`expertises`, \'{"' . $userExpertise . '":1}\')')
+        //need to change backend to developer, frontend to designer in users 
+        $skillListsProgramming =  $this->skill::whereRaw('JSON_CONTAINS(`expertise`, \'{"' . $userExpertise . '":1}\')')
             ->where('category', 'programming')
             ->get();
 
-        $skillListsFramework =  $this->skill::whereRaw('JSON_CONTAINS(`expertises`, \'{"' . $userExpertise . '":1}\')')
+        $skillListsFramework =  $this->skill::whereRaw('JSON_CONTAINS(`expertise`, \'{"' . $userExpertise . '":1}\')')
             ->where('category', 'framework')
             ->get();
+        
+        $skillListsMotion =  $this->skill::whereRaw('JSON_CONTAINS(`expertise`, \'{"' . $userExpertise . '":1}\')')
+        ->where('category', 'graphics')
+        ->get();
+
+        //video editing category for motion
 
         foreach ($skillListsProgramming as $skillList) {
-            $skillListsArrayForProgramming[] = $skillList->name;
+            $skillListsArrayForProgramming[$skillList->id] = $skillList->name;
         }
 
         foreach ($skillListsFramework as $skillList) {
-            $skillListsArrayForFrameworks[] = $skillList->name;
+            $skillListsArrayForFrameworks[$skillList->id] = $skillList->name;
+        }
+
+        foreach ($skillListsMotion as $skillList) {
+            $skillListsArrayForMotion[$skillList->id] = $skillList->name;
         }
 
         return response()->json([
             'programming' => $skillListsArrayForProgramming,
-            'framework' => $skillListsArrayForFrameworks
+            'framework' => $skillListsArrayForFrameworks,
+            'motion' => $skillListsArrayForMotion,
         ]);
     }
 }

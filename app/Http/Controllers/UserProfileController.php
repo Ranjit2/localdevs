@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Repositories\User\SkillLists;
 use App\Repositories\User\UserProfile;
 use Symfony\Component\HttpFoundation\Response;
@@ -32,16 +33,31 @@ class UserProfileController extends Controller
 
     public function userDetails()
     {
-        $user = \App\Models\User::where('id', 1)->first();
+
+        $user = \App\Models\User::where('id', auth()->id())->first();
+
+        $filteredDaysNullValue = array_filter(explode(",", $user->availableDays), fn ($value) => $value !== '');
+        $filteredWorkTypeNullValue = array_filter(explode(",", $user->workType), fn ($value) => $value !== '');
+        
+        $skillSet = [];
+        foreach($user->skills as $skill) {
+            $skillSet[] = $skill['name'];
+        }
+        
         $details = [
             'firstname' => $user->firstname,
             'lastname' => $user->lastname,
             'about' => $user->about,
-            'numberOfDays' => $user->numberOfDays,
-            'workType' => $user->workType
+            'availableDays' => array_values($filteredDaysNullValue),
+            'workType' => array_values($filteredWorkTypeNullValue),
+            'skills' => $skillSet
         ];
 
         return $details;
+    }
 
+    public function edit(User $user)
+    {
+        return view('profile-edit', compact('user'));
     }
 }

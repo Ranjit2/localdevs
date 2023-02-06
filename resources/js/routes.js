@@ -1,6 +1,7 @@
 import Home from './Home.vue';
 import Profile from './Profile.vue';
 import ProfileEdit from './ProfileEdit.vue';
+import Home2 from './Home2.vue';
 
 export default {
     routes: [
@@ -9,6 +10,11 @@ export default {
             path: '/home',
             name: 'Home',
             component: Home,
+        },
+        {
+            path: '/home2',
+            name: 'Home2',
+            component: Home2,
         },
 
         {

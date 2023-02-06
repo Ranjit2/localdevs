@@ -10,6 +10,8 @@ import routes from './routes.js';
 import Home from './Home.vue'
 import Profile from './Profile.vue'
 import App from './App.vue'
+import ProfileEdit from './ProfileEdit.vue'
+
 
 const router = createRouter({
     history: createWebHistory(),
@@ -17,5 +19,5 @@ const router = createRouter({
   });
   
 createApp(App).use(router).mount("#home")
-//createApp(Profile).use(router).mount("#home")
+createApp(ProfileEdit).use(router).mount("#profile")
 
