@@ -11,6 +11,7 @@ import Home from './Home.vue'
 import Profile from './Profile.vue'
 import App from './App.vue'
 import ProfileEdit from './ProfileEdit.vue'
+import Register from './Register.vue';
 
 
 const router = createRouter({
@@ -20,4 +21,4 @@ const router = createRouter({
   
 createApp(App).use(router).mount("#home")
 createApp(ProfileEdit).use(router).mount("#profile")
-
+createApp(Register).use(router).mount("#register")

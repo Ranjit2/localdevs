@@ -117,10 +117,6 @@ export default {
                     name: "Motion",
                 },
                 {
-                    id: "motion",
-                    name: "Motion",
-                },
-                {
                     id: "pm",
                     name: "Project Manager",
                 },

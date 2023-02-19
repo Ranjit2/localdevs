@@ -66,4 +66,9 @@ class TalentFilterController extends Controller
     {
         return view('design');
     }
+
+    public function register()
+    {
+        return view('talent.register');
+    }
 }

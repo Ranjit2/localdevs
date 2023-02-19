@@ -8,7 +8,7 @@ use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-
+use Illuminate\Support\Str;
 class RegisterController extends Controller
 {
     /*
@@ -49,10 +49,11 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
+        $data = $data['formData'];
         return Validator::make($data, [
-            'name' => ['required', 'string', 'max:255'],
+         //   'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+           // 'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
     }
 
@@ -64,10 +65,16 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+       // $data = $data['formData'];
         return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
+            //'name' => $data['formData']['m'],
+            'firstname' => $fn = $data['formData']['firstName'],
+            'lastname' => $ln = $data['formData']['lastName'],
+            'email' => $data['formData']['email'],
+            'password' => Hash::make($data['formData']['password']),
+            'expertise'=> $data['formData']['expertise'],
+            'slug' =>  Str::slug($fn.$ln)
         ]);
+
     }
 }

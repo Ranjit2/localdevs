@@ -19,13 +19,15 @@ Route::get('/', function () {
     return redirect()->to('/home');
 });
 
-Auth::routes();
+Auth::routes(['verify' => true]);
 Route::get('filter/talents', [TalentFilterController::class, 'index']);
 Route::get('skills', [TalentFilterController::class, 'skills']);
 Route::get('design', [TalentFilterController::class, 'design']);
 
 Route::post('users',[TalentFilterController::class, 'user']);
 Route::get('/talent/{slug}', [TalentFilterController::class, 'view']);
+Route::get('/user/register', [TalentFilterController::class, 'register'])->name('user.register');
+
 
 Route::post('/user/profile', [UserProfileController::class, 'store']);
 Route::get('/userbased-skills', [UserProfileController::class, 'findSkillListsForloggedInUser']);
