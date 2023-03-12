@@ -13,7 +13,7 @@
             <p> Work preference: {{ $user->workPreference }} </p>
             <p> Experience: {{ $user->workPreference}} </p>
             <p> Work type: {{ $user->workType }} </p>
-            <a href="/user/profile/{{auth()->id()}}/edit">Edit profile</a>
+            <a href="/dashboard">Edit profile</a>
         </div>
         <div class="col-md-4">
             <h1>Skills</h1>
@@ -34,6 +34,13 @@
         @foreach($user->skills as $skill)
             <span class="btn btn-secondary">{{ $skill->name }}</span>
         @endforeach
+    </div>
+    <hr>
+    <h2>Top Expertise</h2>
+    <div>
+        <p>PHP</p>
+        <p>* years</p>
+        <p>I have done serveral projects</p>
     </div>
 </div>
 @endsection

@@ -6,9 +6,9 @@
 
 
     <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header" id="app">{{ __('Loginss') }}
+        <div class="col-md-8" id="login">
+            <!-- <div class="card"> -->
+                <div class="card-header" id="app">{{ __('Login') }}
 
                 </div>
 

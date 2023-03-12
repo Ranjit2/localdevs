@@ -21,11 +21,13 @@ class SkillLists
         $skillListsArrayForProgramming = [];
         $skillListsArrayForFrameworks = [];
         $skillListsArrayForMotion = [];
+        $skillListsArrayForDB = [];
         $userExpertise = auth()->user()->expertise; //auth()->user->expertise;
 
         //need to change backend to developer, frontend to designer in users 
         $skillListsProgramming =  $this->skill::whereRaw('JSON_CONTAINS(`expertise`, \'{"' . $userExpertise . '":1}\')')
             ->where('category', 'programming')
+            ->orderBy('name','asc')
             ->get();
 
         $skillListsFramework =  $this->skill::whereRaw('JSON_CONTAINS(`expertise`, \'{"' . $userExpertise . '":1}\')')
@@ -34,6 +36,10 @@ class SkillLists
         
         $skillListsMotion =  $this->skill::whereRaw('JSON_CONTAINS(`expertise`, \'{"' . $userExpertise . '":1}\')')
         ->where('category', 'graphics')
+        ->get();
+
+        $skillListsDB =  $this->skill::whereRaw('JSON_CONTAINS(`expertise`, \'{"' . $userExpertise . '":1}\')')
+        ->where('category', 'database')
         ->get();
 
         //video editing category for motion
@@ -50,10 +56,15 @@ class SkillLists
             $skillListsArrayForMotion[$skillList->id] = $skillList->name;
         }
 
+        foreach ($skillListsDB as $skillList) {
+            $skillListsArrayForDB[$skillList->id] = $skillList->name;
+        }
+        //skills table is made by admin 
         return response()->json([
             'programming' => $skillListsArrayForProgramming,
             'framework' => $skillListsArrayForFrameworks,
             'motion' => $skillListsArrayForMotion,
+            'database' => $skillListsArrayForDB
         ]);
     }
 }

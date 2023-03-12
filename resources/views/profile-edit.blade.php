@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container" id="profile">
-    <profile-edit/>
-    Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium, doloribus deserunt! Magni a eaque eum iste! Dolorem, vitae voluptate debitis eos quaerat quo minima eius. Quasi hic soluta fugiat distinctio.
+<profile-edit></profile-edit>
+    <!-- <profile-edit/> You do not need to load this component here since you have loaded it from app.js-->
 </div>
 @endsection

@@ -7,6 +7,7 @@ use App\Repositories\User\SkillLists;
 use App\Repositories\User\UserProfile;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class UserProfileController extends Controller
 {
@@ -33,7 +34,6 @@ class UserProfileController extends Controller
 
     public function userDetails()
     {
-
         $user = \App\Models\User::where('id', auth()->id())->first();
 
         $filteredDaysNullValue = array_filter(explode(",", $user->availableDays), fn ($value) => $value !== '');
@@ -41,7 +41,7 @@ class UserProfileController extends Controller
         
         $skillSet = [];
         foreach($user->skills as $skill) {
-            $skillSet[] = $skill['name'];
+            $skillSet[] = $skill['id'];
         }
         
         $details = [
@@ -50,14 +50,46 @@ class UserProfileController extends Controller
             'about' => $user->about,
             'availableDays' => array_values($filteredDaysNullValue),
             'workType' => array_values($filteredWorkTypeNullValue),
-            'skills' => $skillSet
+            'skills' => $skillSet,
+            'profileImage' => $user->profileImage
         ];
 
         return $details;
     }
 
-    public function edit(User $user)
+    public function edit() // no need User $user as params
     {
-        return view('profile-edit', compact('user'));
+        //we have routekeyName in User model to get based on slug
+        //render a view where we can load profileedit componenent from app.js
+        return view('profile-edit');
+    }
+
+    public function uploadToS3(Request $request)
+    {
+        $request->validate([
+                'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            ]);
+            if ($request->hasFile('image')) {
+                $file = $request->file('image')->hashName();
+                $path = $request->file('image')->storeAs(
+                    'images', //your s3 images folder
+                    $file,
+                    's3'
+                );
+
+                $s3 = Storage::disk('s3');
+
+                User::where('id',auth()->id())->update([
+                    'profileImage' => $awsPath = $s3->url($path)
+                ]);
+
+                return response()->json($awsPath);
+
+         }
+    }
+
+    public function dashboard()
+    {
+        return view('dashboard');
     }
 }

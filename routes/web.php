@@ -1,7 +1,10 @@
 <?php
 
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\ImageController;
 use App\Http\Controllers\TalentFilterController;
 use App\Http\Controllers\UserProfileController;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,12 +17,29 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+/**
+ * Email verification: https://laravel.com/docs/7.x/verification
+ * include verify=>true in Auth::routes()
+ * enable MustVerifyEmail in user model
+ * implement MustVerifyEmail
+ * include ->middleware('verified') in route
+ * now laravel will automatically send email
+ */
 
 Route::get('/', function () {
+
+    // if (auth()->user()->email_verified_at == '') {
+    //     return redirect()->to('/email/verify');
+    // }
     return redirect()->to('/home');
 });
 
 Auth::routes(['verify' => true]);
+
+Route::get('/forHeader', function() {
+    return User::where('id',auth()->id())->first()->slug;
+});
+
 Route::get('filter/talents', [TalentFilterController::class, 'index']);
 Route::get('skills', [TalentFilterController::class, 'skills']);
 Route::get('design', [TalentFilterController::class, 'design']);
@@ -31,11 +51,36 @@ Route::get('/user/register', [TalentFilterController::class, 'register'])->name(
 
 Route::post('/user/profile', [UserProfileController::class, 'store']);
 Route::get('/userbased-skills', [UserProfileController::class, 'findSkillListsForloggedInUser']);
-Route::get('/user/detials', [UserProfileController::class, 'userDetails']);
-Route::get('/user/profile/{user}/edit', [UserProfileController::class, 'edit']);
+Route::get('/user/details', [UserProfileController::class, 'userDetails']);
+//Route::get('/dashboard', [UserProfileController::class, 'dashboard']);
+Route::post('profileImage/upload', [UserProfileController::class, 'uploadToS3']);
 
+
+//Route::get('/user/profile/{user}/edit', [UserProfileController::class, 'edit']);
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
 //Route::get('/home2', [App\Http\Controllers\HomeController::class, 'home2'])->name('home2');
 
+Route::get('/user/role',function() {
+    $userRole = User::where('id',auth()->id())->first()->is_user;
+    if($userRole == 'talent') {
+        return response()->json(['user' => 'talent']);
+    }
+});
 
-Route::get('/new', [App\Http\Controllers\HomeController::class, 'new'])->name('home');
+Route::post('/user/login', [LoginController::class, 'postLogin']);
+
+//spa
+//disable above /talent/{slug} route
+//enable profile route from routes.js
+// Route::get('/talent/profile/{slug}', function($slug) {
+//     return \App\Models\User::where('slug', $slug)->first();
+// });
+Route::get('/tailwind', function() {
+    return view('tailwind');
+});
+
+Route::get('/{any}', function () {
+    return view('home');
+})->where('any', '.*');
+

@@ -15,6 +15,7 @@ class UserProfile {
 
     public function store(array $data)
     {
+       // dd($data['userSelectedSkills']);
        // dd(implode(",",$data['workType']));
         $user = $this->user->find(auth()->id());
         

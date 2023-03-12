@@ -25,11 +25,18 @@ class TalentFilterController extends Controller
             }
 
             if (array_key_exists('preference', $query) && $query['preference']) {
-                $sql->whereIn('workPreference', $query['preference']);
+                $sql->where(function($queryBuilder) use ($query) {
+                    $queryBuilder->whereIn('workPreference', $query['preference'])
+                        ->orWhere('workPreference', 'onsite,wfh');
+                });
             }
 
             if (array_key_exists('experience', $query) && $query['experience']) {
-                $sql->where('experience', $query['experience']);
+                $arrayNumber = explode('-', $query['experience']);
+                $firstValue = $arrayNumber[0];
+                $secondValue = $arrayNumber[1];
+                //two digit numbers are considered as string, so convert to int with intval
+                $sql->whereBetween('experience', [$firstValue, intval($secondValue)]);
             }
 
             if (array_key_exists('place', $query) && $query['place']) {
@@ -47,7 +54,7 @@ class TalentFilterController extends Controller
                     ->groupBy('users.id');
             }
 
-        return $sql->paginate(2);
+        return $sql->paginate(5);
     }
 
     public function view(User $user,$slug) 
