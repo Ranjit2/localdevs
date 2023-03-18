@@ -62,9 +62,9 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function place()
+    public function places()
     {
-        return $this->belongsToMany(Place::class);
+        return $this->belongsToMany(Place::class, 'place_user','user_id','place_id');
     }
 
     public function skills() //profile

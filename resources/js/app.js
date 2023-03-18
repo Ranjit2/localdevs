@@ -22,7 +22,7 @@ const router = createRouter({
     routes: routes.routes,
 });
   
-  
+
 createApp(App).use(router).use(store).mount("#home")
 createApp(ProfileEdit).use(router).use(store).mount("#profile")
 createApp(Register).use(router).use(store).mount("#register")

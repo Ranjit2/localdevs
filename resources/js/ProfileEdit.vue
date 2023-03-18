@@ -1,10 +1,10 @@
 <template>
     <!-- <Header /> -->
     <div class="container rounded bg-white mt-5">
-        <RouterLink to="/dashboard">Dashboard</RouterLink>
-        userID:{{ userStore.userId }}
-        <div class="row">
-            <div class="col-md-4 border-right">
+        <!-- <RouterLink to="/dashboard">Dashboard</RouterLink>
+        userID:{{ userStore.userId }} -->
+        <div class="row justify-content-center">
+            <!-- <div class="col-md-4 border-right">
                 <div class="d-flex flex-column align-items-center text-center p-3 py-5">
                     <form action="">
                         <input type="file" ref="myImage" class="form-control" @change="updateProfilePicture()">
@@ -20,18 +20,52 @@
                     </p>
                     <img v-else class="bordered-image" :src="profileImage" width="90"
                         style="border:1px solid #ccc;border-radius: 50%;">
-                    <span class="font-weight-bold">John Doe</span>
-                    <span class="text-black-50">john_doe12@bbb.com</span>
-                    <span>United States</span>
+                    <span class="font-weight-bold">{{ formData.firstname }}&nbsp;{{ formData.lastname }}</span>
+                    <span class="text-black-50">{{ expertise }}</span>
+                    <span>{{ address }}</span>
                 </div>
-            </div>
+            </div> -->
             <div class="col-md-8">
+                <div class="d-flex flex-column align-items-center text-center">
+                    <form action="">
+                        <!-- <input type="file" ref="myImage" class="form-control" @change="updateProfilePicture()"> -->
+                        <p id="errorUploadingImage"></p>
+                    </form>
+
+
+
+                    <p v-if="status">Uploading...<br>
+                    <div class="progress">
+                        <div class="progress-bar" role="progressbar" :style="{ width: `${progress}%` }"
+                            :aria-valuenow="progress" aria-valuemin="0" aria-valuemax="100">
+                            {{ progress }}%
+                        </div>
+                    </div>
+                    </p>
+<!-- 
+                    <img v-else class="bordered-image" :src="profileImage" width="90"
+                        style="border:1px solid #ccc;border-radius: 50%;"> -->
+
+                        <div class="image-container">
+                        <img class="bordered-image" :src="profileImage" width="90"
+                            style="border:1px solid #ccc;border-radius: 50%;">
+                        <label for="image-upload" class="image-upload-label">
+                            <i class="fa fa-camera"></i>
+                            Upload Image
+                        </label>
+                        <input type="file" ref="myImage" id="image-upload" class="image-upload-input" @change="updateProfilePicture()">
+                    </div>
+
+                    <span class="font-weight-bold">{{ formData.firstname }}&nbsp;{{ formData.lastname }}</span>
+                    <span class="text-black-50">{{ expertise }}</span>
+                    <span>{{ address }}</span>
+                </div>
                 <form @submit.prevent="formOnSubmit" method="POST">
-                    <div class="p-3 py-5">
+                    <div class="p-3 py-1">
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <div class="d-flex flex-row align-items-center back"><i
                                     class="fa fa-long-arrow-left mr-1 mb-1"></i>
-                                <h6>Back to Profile</h6>
+                                <h6><RouterLink to="/dashboard">Back to Dashboard</RouterLink></h6>
                             </div>
                             <h6 class="text-right">Edit Profile</h6>
                         </div>
@@ -68,8 +102,75 @@
                                 {{ error.$message }}
                             </span>
                         </div>
-                        <div class="mb-3">
-                            <label for="days" class="form-label">Days Available</label><br>
+
+                        <div class="row">
+                            <div class="col-md-4 mt-3">Your website
+                                <input type="text" class="form-control">
+                            </div>
+                            <span v-for="error in v$.about.$errors" :key="error.$uid" class="error-red">
+                                {{ error.$message }}
+                            </span>
+                            <div class="col-md-4 mt-3">LinkedIn
+                                <input type="text" class="form-control">
+                            </div>
+                            <span v-for="error in v$.about.$errors" :key="error.$uid" class="error-red">
+                                {{ error.$message }}
+                            </span>
+                            <div class="col-md-4 mt-3">Github
+                                <input id="input-github" name="github" v-model="formData.github" @keyup="formData.github"
+                                    type="text" placeholder="https://github.com/" class="form-control">
+
+                                <p style="color:red" v-if="githubFiledErrorMessage && formData.github.length > 3">{{
+                                    githubFiledErrorMessage }}</p>
+                                <span v-for="error in v$.github.$errors" :key="error.$uid" class="error-red">
+                                    {{ error.$message }}
+                                </span>
+                            </div>
+                            <span v-for="error in v$.about.$errors" :key="error.$uid" class="error-red">
+                                {{ error.$message }}
+                            </span>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mt-3">Year of experience
+                           
+                               <select class="form-control" v-model="formData.experience">
+                                <option name="" value="1">1 year</option>
+                                <option name="" value="2">2 years</option>
+                                <option name="" value="3">3 years</option>
+                                <option name="" value="4">4 years</option>
+                                <option name="" value="5">5 years</option>
+                                <option name="" value="6">6 years</option>
+                                <option name="" value="7">7 years</option>
+                                <option name="" value="8">8 years</option>
+                                <option name="" value="9">9 years</option>
+                                <option name="" value="10">10 years</option>
+                                <option name="" value="11">11 years</option>
+                                <option name="" value="12">12 years</option>
+                                <option name="" value="13">13 years</option>
+                                <option name="" value="14">14 years</option>
+                                <option name="" value="15">15 years</option>
+                               </select>
+                            </div>
+                            <span v-for="error in v$.about.$errors" :key="error.$uid" class="error-red">
+                                {{ error.$message }}
+                            </span>
+                            <div class="col-md-6 mt-3">Role level
+                                <select class="form-control" v-model="formData.roleLevel">
+                                <option name="" value="junior">Junior level</option>
+                                <option name="" value="midlevel">Mid-level</option>
+                                <option name="" value="senior">Senior level</option>
+                                <option name="" value="clevel">c-level</option>
+                                </select>
+                            </div>
+                            <span v-for="error in v$.about.$errors" :key="error.$uid" class="error-red">
+                                {{ error.$message }}
+                            </span>
+                        </div>
+                            
+                        <hr>
+
+                        <div class="mb-3 mt-2">
+                            <label for="days" class="form-label"><b>Days Available</b></label><br>
                             <div class="form-check form-check-inline" v-for="(day, index) in days">
                                 <input class="form-check-input" type="checkbox" v-model="formData.availableDays"
                                     :value="day.name" :id="index" :checked="formData.availableDays.includes(day.name)">
@@ -80,49 +181,16 @@
                             </div>
                         </div>
 
-
-                        <div class="row profile-row">
-                            <div class="col-md-2 fw-form-label pt-2">
-                                Github
-                            </div>
-                            <div class="col-md-10 d-flex flex-wrap align-content-center">
-                                <div class="row w-100">
-                                    <div class="col-md d-flex">
-                                        <div id="fieldset-github" role="group" class="form-group flex-fill">
-                                            <!---->
-                                            <div class="bv-no-focus-ring">
-                                                <input id="input-github" name="github" v-model="formData.github"
-                                                    @keyup="formData.github" type="text" placeholder="https://github.com/"
-                                                    class="form-control">
-                                                <div tabindex="-1" role="alert" aria-live="assertive" aria-atomic="true"
-                                                    class="invalid-feedback">Please enter a GitHub handle.</div>
-                                                <!---->
-                                                <!---->
-
-                                                <p style="color:red"
-                                                    v-if="githubFiledErrorMessage && formData.github.length > 3">{{
-                                                        githubFiledErrorMessage }}</p>
-                                                <span v-for="error in v$.github.$errors" :key="error.$uid"
-                                                    class="error-red">
-                                                    {{ error.$message }}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
                         <div class="mb-3">
-                            <label for="days" class="form-label">Work Types *{{ formData.workType }}</label><br>
+                            <!-- {{ formData.workType }} -->
+                            <label for="days" class="form-label"><b>Work Types</b></label><br>
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" id="freelancer" type="checkbox"
                                     checked="formData.workType.includes('freelancer')" value="freelancer"
                                     v-model="formData.workType">
                                 <label class="form-check-label" for="freelancer">Long term </label>
-
-
                             </div>
+
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" id="employee" type="checkbox"
                                     checked="formData.workType.includes('freelancer')" value="employee"
@@ -134,26 +202,28 @@
                             </span>
                         </div>
                         <h5>Skills</h5>
-                        <div class="mb-3">
-                            <label for="days" class="form-label" v-if="userBasedSkillList.programming">Programming
-                                Languages</label><br>
-                            {{ formData.userSelectedSkills }}
-                            {{ userBasedSkillList.programming }}
+
+                        <div class="mb-3" v-if="userBasedSkillList.programming">
+                            <label for="days" class="form-label" v-if="userBasedSkillList.programming"><b>Programming
+                                    Languages</b></label><br>
                             <div class="form-check form-check-inline"
                                 v-for="(programming, index) in userBasedSkillList.programming">
-                              
+
                                 <input type="checkbox" class="form-check-input" v-model="formData.userSelectedSkills"
                                     :checked="formData.userSelectedSkills.includes(index)" :value="index"
                                     :id="programming" />
-                                <label class="form-check-label" :for="programming">  {{ index }}{{ programming }}</label>
+                                <!-- index is ID here, not index that starts from 0 -->
+                                <label class="form-check-label" :for="programming"> {{ programming }}</label>
                                 <span v-for="error in v$.availableDays.$errors" :key="error.$uid" class="error-red">
                                     {{ error.$message }}
                                 </span>
                             </div>
                         </div>
 
-                        <div class="mb-3">
-                            <label for="days" class="form-label" v-if="userBasedSkillList.framework">Frameworks
+                        <div class="mb-3" v-if="userBasedSkillList.framework">
+                            <label for="days" class="form-label" v-if="userBasedSkillList.framework"><b>Web Frameworks, CMS
+                                    &
+                                    Mobile Development</b>
                             </label><br>
                             <div class="form-check form-check-inline"
                                 v-for="(framework, index) in userBasedSkillList.framework">
@@ -167,8 +237,8 @@
                             </div>
                         </div>
 
-                        <div class="mb-3">
-                            <label for="days" class="form-label" v-if="userBasedSkillList.database">Databases
+                        <div class="mb-3" v-if="userBasedSkillList.database">
+                            <label for="days" class="form-label"><b>Databases</b>
                             </label><br>
                             <div class="form-check form-check-inline"
                                 v-for="(database, index) in userBasedSkillList.database">
@@ -182,9 +252,8 @@
                             </div>
                         </div>
 
-                        {{ userBasedSkillList.motion }}
                         <div class="mb-3" v-if="userBasedSkillList.motion">
-                            <label for="days" class="form-label">Motion
+                            <label for="days" class="form-label"><b>Motion</b>
                             </label><br>
                             <div class="form-check form-check-inline" v-for="(motion, index) in userBasedSkillList.motion">
                                 <input type="checkbox" class="form-check-input" v-model="formData.userSelectedSkills"
@@ -196,41 +265,71 @@
                             </div>
                         </div>
 
-                        <div class="mb-3">
-                            <label for="days" class="form-label">Location preference *</label><br>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" v-model="formData.workPreference" id="wfh">
-                                <label class="form-check-label" for="wfh">Work from home</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" v-model="formData.workPreference"
-                                    id="onsite">
-                                <label class="form-check-label" for="onsite">Onsite</label>
+                        <div class="mb-3" v-if="userBasedSkillList.cloudcomputing">
+                            <label for="days" class="form-label"><b>Cloud computing</b>
+                            </label><br>
+                            <div class="form-check form-check-inline"
+                                v-for="(cloudcomputing, index) in userBasedSkillList.cloudcomputing">
+                                <input type="checkbox" class="form-check-input" v-model="formData.userSelectedSkills"
+                                    :checked="formData.userSelectedSkills.includes(cloudcomputing)" :value="index"
+                                    :id="cloudcomputing" />
+                                <label class="form-check-label" :for="cloudcomputing">{{ cloudcomputing }}</label>
+                                <span v-for="error in v$.availableDays.$errors" :key="error.$uid" class="error-red">
+                                    {{ error.$message }}
+                                </span>
                             </div>
                         </div>
 
-                        <div class="row profile-row">
-                            <div class="col-md-2 fw-form-label flex-wrap align-content-center">
-                                Available for Work
+                        <div class="mb-3">
+                            <!-- {{ formData.workPreference }} -->
+                            <label class="form-label"><b>Location preferences</b></label><br>
+
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" id="wfh" type="checkbox"
+                                    checked="formData.workPreference.includes('wfh')" value="wfh"
+                                    v-model="formData.workPreference">
+                                <label class="form-check-label" for="wfh">Work from home </label>
                             </div>
-                            <div class="col-md-10 d-flex flex-wrap align-content-center">
-                                <div class="row w-100">
-                                    <div class="col-md">
-                                        <div class="pl-4 ml-1 custom-control custom-checkbox"><input id="is_available"
-                                                type="checkbox" name="is_available" aria-required="true"
-                                                class="custom-control-input" value="true"><label for="is_available"
-                                                class="custom-control-label"></label></div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" id="onsite" type="checkbox"
+                                    checked="formData.workPreference.includes('onsite')" value="onsite"
+                                    v-model="formData.workPreference">
+                                <label class="form-check-label" for="onsite">Onsite</label>
+                            </div>
+                        </div>
+                        <span v-for="error in v$.workPreference.$errors" :key="error.$uid" class="error-red">
+                            {{ error.$message }}
+                        </span>
+
+                        <div class="mb-3" v-if="formData.workPreference.includes('onsite')">
+                            <p>Since you chose <b>onsite</b>, Please choose the places where you can work onsite</p>
+
+                            <div class="card" style="background-color:;overflow-y: scroll;max-height: 150px;">
+                                <div class="card-body shadow-sm">
+                                    <div class="row">
+                                        <label class="form-label">
+                                        </label>
+                                        <div class="form-check form-check-inline" v-for="(place, index) in places"
+                                            :key="index">
+                                            <input class="form-check-input" :id="place.name" type="checkbox"
+                                                :checked="formData.userSelectedPlaces.includes(place.id)"
+                                                v-model="formData.userSelectedPlaces" :value="place.id">
+                                            <label class="form-check-label" :for="place.name">{{ place.name }}</label>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
                     </div>
-                    <div class="mt-5 text-right">
-                        <button class="btn btn-primary profile-button" type="submit">
-                            Save Profile
+                    <div class="text-right">
+                        <button class="btn btn-primary profile-button" type="submit" :class="{ 'loading': isSuccess }"
+                            :disabled="isSuccess">
+                            <span v-if="!isSuccess">Save Profile</span>
+                            <span v-else> Saving...<i class="fas fa-spinner fa-spin"></i></span>
                         </button>
                     </div>
+
                 </form>
             </div>
         </div>
@@ -254,9 +353,12 @@ const profileImage = ref('')
 const previewImage = ref('')
 const status = ref(false)
 const githubFiledErrorMessage = ref('')
-const userBasedSkillList = ref([])
+const userBasedSkillList = ref([])//[{}]
 const progress = ref('')
-
+const expertise = ref('')
+const address = ref('')
+const places = ref([])
+const isSuccess = ref(false);
 
 const containsUser = (value) => {
     //  return value.includes("user")
@@ -304,11 +406,14 @@ const formData = ref({
     lastname: '',
     about: '',
     github: '',
+    experience:'',
+    roleLevel:'',
     availableDays: [],
     workType: [],
     workPreference: [],
     skills: [],
-    userSelectedSkills: []
+    userSelectedSkills: [],
+    userSelectedPlaces: []
 })
 
 const onlyString = () => {
@@ -326,6 +431,7 @@ const checkGithub = () => {
 
     }
     githubFiledErrorMessage.value = '';
+
     return true;
 }
 
@@ -355,6 +461,10 @@ const rules = {
     },
     workType: {
         required: helpers.withMessage('Please select at least one work type', required),
+    },
+    workPreference: {
+        required: helpers.withMessage('Please select your work preferences', required),
+        // minLength: minLength(1)
     }
 }
 const v$ = useVuelidate(rules, formData);
@@ -363,9 +473,12 @@ const formOnSubmit = async () => {
 
     const result = await v$.value.$validate();
     if (result) {
-        alert('success')
+        // alert('success')
+        isSuccess.value = true
         axios.post('/user/profile', { formData: formData.value }).then((response) => {
             console.log(response.data)
+            isSuccess.value = false
+
         }).catch((error) => {
             console.log(error)
         })
@@ -384,10 +497,15 @@ onMounted(() => {
         console.log('error in fetching skills', error)
     })
 
+    axios.get('/places').then((response) => {
+        places.value = response.data  //get all places
+        console.log(places.value)
+    }).catch((error) => alert('unable to fetch places'))
+
     setTimeout(() => {
         getUserDetails() //this need to be loaded a bit late then userBasedSkills otherwise our checked for programming does not work
-                        // this is because our either userBasedSkill[] or below response.data.skills[] will be null array to compare the values, 
-                        //this makes sure our both arrays has some value to comapre
+        // this is because our either userBasedSkill[] or below response.data.skills[] will be null array to compare the values, 
+        //this makes sure our both arrays has some value to comapre
     }, 500);
 
 })
@@ -397,11 +515,18 @@ const getUserDetails = () => {
         formData.value.firstname = response.data.firstname
         formData.value.lastname = response.data.lastname
         formData.value.about = response.data.about
+        expertise.value = response.data.expertise
+        address.value = response.data.userAddress
+        formData.value.experience = response.data.experience
+        formData.value.roleLevel = response.data.roleLevel
         formData.value.availableDays = response.data.availableDays
         formData.value.workType = response.data.workType
         formData.value.userSelectedSkills = response.data.skills
         profileImage.value = response.data.profileImage
-        console.log(response.data.skills)
+        formData.value.workPreference = response.data.workPreference
+        formData.value.places = response.data.places
+        formData.value.userSelectedPlaces = response.data.userSelectedPlaces
+        console.log(response.data.userSelectedPlaces)
     });
 }
 
@@ -437,8 +562,74 @@ const updateProfilePicture = (e) => {
 }
 </script>
 <style scoped>
+/**upload profile pic */
+.image-container {
+    position: relative;
+}
+.image-upload-label {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #000;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.image-upload-label i {
+    margin-right: 10px;
+}
+
+.image-upload-input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+.image-container:hover .image-upload-label {
+    display: block;
+}
+
+/**upload profile pic ends */
+/* pinner button css  */
+.profile-button.loading {
+    position: relative;
+    overflow: hidden;
+}
+
+.profile-button.loading i.fa-spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.profile-button.loading i.fa-spinner {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* pinner button css ends */
 .error-red {
     color: red;
+}
+
+.btn-outline-info.active {
+    color: #f3f3f3;
 }
 
 .loader {

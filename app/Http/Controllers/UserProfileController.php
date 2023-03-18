@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Place;
 use App\Models\User;
 use App\Repositories\User\SkillLists;
 use App\Repositories\User\UserProfile;
@@ -48,13 +49,24 @@ class UserProfileController extends Controller
             'firstname' => $user->firstname,
             'lastname' => $user->lastname,
             'about' => $user->about,
+            'expertise' => $user->expertise,
+            'userAddress' => $user->address,
+            'experience' => $user->experience,
+            'roleLevel' => $user->roleLevel,
             'availableDays' => array_values($filteredDaysNullValue),
             'workType' => array_values($filteredWorkTypeNullValue),
             'skills' => $skillSet,
-            'profileImage' => $user->profileImage
-        ];
+            'profileImage' => $user->profileImage,
+            'workPreference' => explode(',',$user->workPreference), //pass as an array, we can use includes('wfh') in :checked in vuejs 
+            'userSelectedPlaces' => $user->places->map(fn($place) => $place['id'])
+        ]; 
 
         return $details;
+    }
+
+    public function places()
+    {
+        return Place::all();
     }
 
     public function edit() // no need User $user as params

@@ -52,6 +52,7 @@ Route::get('/user/register', [TalentFilterController::class, 'register'])->name(
 Route::post('/user/profile', [UserProfileController::class, 'store']);
 Route::get('/userbased-skills', [UserProfileController::class, 'findSkillListsForloggedInUser']);
 Route::get('/user/details', [UserProfileController::class, 'userDetails']);
+Route::get('places',[UserProfileController::class, 'places']);
 //Route::get('/dashboard', [UserProfileController::class, 'dashboard']);
 Route::post('profileImage/upload', [UserProfileController::class, 'uploadToS3']);
 

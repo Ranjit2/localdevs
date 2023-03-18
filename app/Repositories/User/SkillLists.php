@@ -22,25 +22,30 @@ class SkillLists
         $skillListsArrayForFrameworks = [];
         $skillListsArrayForMotion = [];
         $skillListsArrayForDB = [];
-        $userExpertise = auth()->user()->expertise; //auth()->user->expertise;
+        $skillListsArrayForCloudComputing = [];
+        $userExpertise = auth()->user()->expertise;
 
         //need to change backend to developer, frontend to designer in users 
         $skillListsProgramming =  $this->skill::whereRaw('JSON_CONTAINS(`expertise`, \'{"' . $userExpertise . '":1}\')')
             ->where('category', 'programming')
-            ->orderBy('name','asc')
+            ->orderBy('name', 'asc')
             ->get();
 
         $skillListsFramework =  $this->skill::whereRaw('JSON_CONTAINS(`expertise`, \'{"' . $userExpertise . '":1}\')')
-            ->where('category', 'framework')
+            ->where('category', 'frameworks')
             ->get();
-        
+
         $skillListsMotion =  $this->skill::whereRaw('JSON_CONTAINS(`expertise`, \'{"' . $userExpertise . '":1}\')')
-        ->where('category', 'graphics')
-        ->get();
+            ->where('category', 'motion')
+            ->get();
 
         $skillListsDB =  $this->skill::whereRaw('JSON_CONTAINS(`expertise`, \'{"' . $userExpertise . '":1}\')')
-        ->where('category', 'database')
-        ->get();
+            ->where('category', 'database')
+            ->get();
+
+        $skillListsCloudComputing =  $this->skill::whereRaw('JSON_CONTAINS(`expertise`, \'{"' . $userExpertise . '":1}\')')
+            ->where('category', 'cloud computing')
+            ->get();
 
         //video editing category for motion
 
@@ -59,12 +64,34 @@ class SkillLists
         foreach ($skillListsDB as $skillList) {
             $skillListsArrayForDB[$skillList->id] = $skillList->name;
         }
+
+        foreach ($skillListsCloudComputing as $skillList) {
+            $skillListsArrayForCloudComputing[$skillList->id] = $skillList->name;
+        }
         //skills table is made by admin 
-        return response()->json([
-            'programming' => $skillListsArrayForProgramming,
-            'framework' => $skillListsArrayForFrameworks,
-            'motion' => $skillListsArrayForMotion,
-            'database' => $skillListsArrayForDB
-        ]);
+
+        $responseData = [];
+        // this way we are not sending keys like programming,framework etc in response and avoiding uncesseary checks in ProfileEdit.vue
+        if (!empty($skillListsArrayForProgramming)) {
+            $responseData['programming'] = $skillListsArrayForProgramming;
+        }
+
+        if (!empty($skillListsArrayForFrameworks)) {
+            $responseData['framework'] = $skillListsArrayForFrameworks;
+        }
+
+        if (!empty($skillListsArrayForMotion)) {
+            $responseData['motion'] = $skillListsArrayForMotion;
+        }
+
+        if (!empty($skillListsArrayForDB)) {
+            $responseData['database'] = $skillListsArrayForDB;
+        }
+
+        if (!empty($skillListsArrayForCloudComputing)) {
+            $responseData['cloudcomputing'] = $skillListsArrayForCloudComputing;
+        }
+
+        return response()->json($responseData);
     }
 }
