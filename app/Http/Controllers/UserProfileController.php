@@ -39,15 +39,21 @@ class UserProfileController extends Controller
 
         $filteredDaysNullValue = array_filter(explode(",", $user->availableDays), fn ($value) => $value !== '');
         $filteredWorkTypeNullValue = array_filter(explode(",", $user->workType), fn ($value) => $value !== '');
-        
-        $skillSet = [];
+      
+        $skillSetIds = [];
+        $skillSetNames = [];
+        $years = $user->skills()->pluck('year');
+
         foreach($user->skills as $skill) {
-            $skillSet[] = $skill['id'];
+            $skillSetIds[] = $skill['id'];
+            $skillSetNames[] = $skill['name'];
         }
-        
+
         $details = [
             'firstname' => $user->firstname,
             'lastname' => $user->lastname,
+            'slug' => $user->slug,
+            'address' => $user->address,
             'about' => $user->about,
             'expertise' => $user->expertise,
             'userAddress' => $user->address,
@@ -55,7 +61,9 @@ class UserProfileController extends Controller
             'roleLevel' => $user->roleLevel,
             'availableDays' => array_values($filteredDaysNullValue),
             'workType' => array_values($filteredWorkTypeNullValue),
-            'skills' => $skillSet,
+            'skills' => $skillSetIds,
+            'skillNames' => $skillSetNames,
+            'skillYears' => $years,
             'profileImage' => $user->profileImage,
             'workPreference' => explode(',',$user->workPreference), //pass as an array, we can use includes('wfh') in :checked in vuejs 
             'userSelectedPlaces' => $user->places->map(fn($place) => $place['id'])
@@ -98,6 +106,15 @@ class UserProfileController extends Controller
                 return response()->json($awsPath);
 
          }
+    }
+
+    public function updateExperience(Request $request)
+    {
+        $user = auth()->user();
+        $user->skills()->updateExistingPivot($request->skillId,['year' => $request->year]);
+        $years = $user->skills()->pluck('year');
+
+        return response()->json(['yearOfExperiences' => $years]);
     }
 
     public function dashboard()

@@ -24,6 +24,7 @@ const router = createRouter({
   
 
 createApp(App).use(router).use(store).mount("#home")
+createApp(App).use(router).use(store).mount("#home")
 createApp(ProfileEdit).use(router).use(store).mount("#profile")
 createApp(Register).use(router).use(store).mount("#register")
 createApp(Dashboard).use(router).use(store).mount("#dashboard")

@@ -79,13 +79,14 @@
         </div>
         <div class="col-md-9 mt-5">
             <div v-if="loading">
-                Loading...
+                <HomeLoading />
+               <!-- Loading... -->
             </div>
             <p v-if="users.length < 1">
                 No users for this skill set found.
             </p>
 
-            <div class="card mb-3 shadow-lg" v-for="user in users" style="border: 1px solid #ccc;border-radius: 5px;">
+            <div v-if="!loading" class="card mb-3 shadow-lg" v-for="user in users" style="border: 1px solid #ccc;border-radius: 5px;">
                 <a style="cursor:pointer" data-bs-toggle="offcanvas" :data-bs-target="'#offcanvasUser' + user.id">
                     <div class="card-body shadow-sm">
                         <div class="row">
@@ -97,7 +98,8 @@
                             </div>
                             <div class="col-sm-9">
                                 <h4 class="color: navy">{{ user.firstname }}&nbsp;{{ user.lastname }}</h4>
-                                <h5>{{ user.expertise }},&nbsp;<span style="color: #4a4a4a; font-size:medium;">{{ user.experience }} years experience</span></h5>
+                                <h5>{{ user.expertise }},&nbsp;<span style="color: #4a4a4a; font-size:medium;">{{
+                                    user.experience }} years experience</span></h5>
                                 <p style="justify-content: center;">Lorem ipsum dolor sit amet, conskectetur adipiscing
                                     elit. Duis vel risus commodo, faucibus
                                     ipsum nec, bibendum justo. Nullam mattis orci vel quam imperdiet bibendum.</p>
@@ -213,6 +215,8 @@
     <button @click="resetFilters" class="btn btn-danger">Reset filter</button>
 </template>
 <script>
+import HomeLoading from './components/HomeLoading.vue';
+
 export default {
     data() {
         return {
@@ -312,6 +316,9 @@ export default {
     mounted() {
         this.getUsers();
         this.skillLists();
+    },
+    components: {
+        HomeLoading
     },
     methods: {
         skillLists() {
@@ -541,4 +548,5 @@ span.filter-header {
     width: 100%;
     margin-bottom: 10px;
     margin-top: 10px;
-}</style>
+}
+</style>

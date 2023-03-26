@@ -1,39 +1,38 @@
 <template>
     <!-- <Header /> -->
-    <div class="container rounded bg-white mt-5">
-        <!-- <RouterLink to="/dashboard">Dashboard</RouterLink>
-        userID:{{ userStore.userId }} -->
-        <div class="row justify-content-center">
-            <!-- <div class="col-md-4 border-right">
-                <div class="d-flex flex-column align-items-center text-center p-3 py-5">
-                    <form action="">
-                        <input type="file" ref="myImage" class="form-control" @change="updateProfilePicture()">
-                        <p id="errorUploadingImage"></p>
-                    </form>
-                    <p v-if="status">Uploading...<br>
-                    <div class="progress">
-                        <div class="progress-bar" role="progressbar" :style="{ width: `${progress}%` }"
-                            :aria-valuenow="progress" aria-valuemin="0" aria-valuemax="100">
-                            {{ progress }}%
-                        </div>
-                    </div>
-                    </p>
-                    <img v-else class="bordered-image" :src="profileImage" width="90"
-                        style="border:1px solid #ccc;border-radius: 50%;">
-                    <span class="font-weight-bold">{{ formData.firstname }}&nbsp;{{ formData.lastname }}</span>
-                    <span class="text-black-50">{{ expertise }}</span>
-                    <span>{{ address }}</span>
-                </div>
-            </div> -->
-            <div class="col-md-8">
+    <ProfileEditLoading v-if="isLoading" />
+
+    <!-- <div class="col-sm-auto mt-3">
+        <router-link to="/dashboard" class="btn btn-primary" style="background-color: navy;border:1px solid navy;">Back to Dashboard</router-link> 
+    </div>
+    <div class="row justify-content-center align-items-center">
+
+        <div class="col-sm-auto text-center">
+            <h4 class="" v-if="!isLoading">Update your profile</h4>
+        </div>
+    </div> -->
+    <div class="d-flex justify-content-between align-items-center mb-3" v-if="!isLoading">
+        <div class="d-flex flex-row align-items-center back">
+                <!-- <RouterLink to="/dashboard" class="btn btn-light" style="background-color:#5624d0;color:#fff;">Back to
+                    Dashboard</RouterLink> -->
+        </div>
+        <div class="d-flex justify-content-center flex-grow-1">
+            <h4>Make your profile outstanding</h4>
+        </div>
+    </div>
+
+
+    <div class="container rounded bg-white mt-1">
+        <RouterLink to="/dashboard" v-if="!isLoading" class="btn btn-light" style="background-color:#5624d0;color:#fff;">Back to
+                    Dashboard</RouterLink>
+        <div class="row justify-content-center" v-if="!isLoading">
+            <div class="col-md-10">
                 <div class="d-flex flex-column align-items-center text-center">
                     <form action="">
                         <!-- <input type="file" ref="myImage" class="form-control" @change="updateProfilePicture()"> -->
                         <p id="errorUploadingImage"></p>
                     </form>
 
-
-
                     <p v-if="status">Uploading...<br>
                     <div class="progress">
                         <div class="progress-bar" role="progressbar" :style="{ width: `${progress}%` }"
@@ -42,18 +41,20 @@
                         </div>
                     </div>
                     </p>
-<!-- 
+                    <!-- 
                     <img v-else class="bordered-image" :src="profileImage" width="90"
                         style="border:1px solid #ccc;border-radius: 50%;"> -->
 
-                        <div class="image-container">
+                    <div class="image-container">
+                  
                         <img class="bordered-image" :src="profileImage" width="90"
                             style="border:1px solid #ccc;border-radius: 50%;">
                         <label for="image-upload" class="image-upload-label">
                             <i class="fa fa-camera"></i>
                             Upload Image
                         </label>
-                        <input type="file" ref="myImage" id="image-upload" class="image-upload-input" @change="updateProfilePicture()">
+                        <input type="file" ref="myImage" id="image-upload" class="image-upload-input"
+                            @change="updateProfilePicture()">
                     </div>
 
                     <span class="font-weight-bold">{{ formData.firstname }}&nbsp;{{ formData.lastname }}</span>
@@ -62,13 +63,6 @@
                 </div>
                 <form @submit.prevent="formOnSubmit" method="POST">
                     <div class="p-3 py-1">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <div class="d-flex flex-row align-items-center back"><i
-                                    class="fa fa-long-arrow-left mr-1 mb-1"></i>
-                                <h6><RouterLink to="/dashboard">Back to Dashboard</RouterLink></h6>
-                            </div>
-                            <h6 class="text-right">Edit Profile</h6>
-                        </div>
 
                         <div class="row mt-2">
                             <!-- {{ formData }} -->
@@ -132,41 +126,41 @@
                         </div>
                         <div class="row">
                             <div class="col-md-6 mt-3">Year of experience
-                           
-                               <select class="form-control" v-model="formData.experience">
-                                <option name="" value="1">1 year</option>
-                                <option name="" value="2">2 years</option>
-                                <option name="" value="3">3 years</option>
-                                <option name="" value="4">4 years</option>
-                                <option name="" value="5">5 years</option>
-                                <option name="" value="6">6 years</option>
-                                <option name="" value="7">7 years</option>
-                                <option name="" value="8">8 years</option>
-                                <option name="" value="9">9 years</option>
-                                <option name="" value="10">10 years</option>
-                                <option name="" value="11">11 years</option>
-                                <option name="" value="12">12 years</option>
-                                <option name="" value="13">13 years</option>
-                                <option name="" value="14">14 years</option>
-                                <option name="" value="15">15 years</option>
-                               </select>
+
+                                <select class="form-control" v-model="formData.experience">
+                                    <option name="" value="1">1 year</option>
+                                    <option name="" value="2">2 years</option>
+                                    <option name="" value="3">3 years</option>
+                                    <option name="" value="4">4 years</option>
+                                    <option name="" value="5">5 years</option>
+                                    <option name="" value="6">6 years</option>
+                                    <option name="" value="7">7 years</option>
+                                    <option name="" value="8">8 years</option>
+                                    <option name="" value="9">9 years</option>
+                                    <option name="" value="10">10 years</option>
+                                    <option name="" value="11">11 years</option>
+                                    <option name="" value="12">12 years</option>
+                                    <option name="" value="13">13 years</option>
+                                    <option name="" value="14">14 years</option>
+                                    <option name="" value="15">15 years</option>
+                                </select>
                             </div>
                             <span v-for="error in v$.about.$errors" :key="error.$uid" class="error-red">
                                 {{ error.$message }}
                             </span>
                             <div class="col-md-6 mt-3">Role level
                                 <select class="form-control" v-model="formData.roleLevel">
-                                <option name="" value="junior">Junior level</option>
-                                <option name="" value="midlevel">Mid-level</option>
-                                <option name="" value="senior">Senior level</option>
-                                <option name="" value="clevel">c-level</option>
+                                    <option name="" value="Junior">Junior level</option>
+                                    <option name="" value="Mid-level">Mid-level</option>
+                                    <option name="" value="Senior">Senior level</option>
+                                    <option name="" value="c-level">c-level</option>
                                 </select>
                             </div>
                             <span v-for="error in v$.about.$errors" :key="error.$uid" class="error-red">
                                 {{ error.$message }}
                             </span>
                         </div>
-                            
+
                         <hr>
 
                         <div class="mb-3 mt-2">
@@ -302,7 +296,7 @@
                         </span>
 
                         <div class="mb-3" v-if="formData.workPreference.includes('onsite')">
-                            <p>Since you chose <b>onsite</b>, Please choose the places where you can work onsite</p>
+                            <p>Since you choose <b>onsite</b>, Please choose the places where you can work onsite</p>
 
                             <div class="card" style="background-color:;overflow-y: scroll;max-height: 150px;">
                                 <div class="card-body shadow-sm">
@@ -322,9 +316,9 @@
                         </div>
 
                     </div>
-                    <div class="text-right">
-                        <button class="btn btn-primary profile-button" type="submit" :class="{ 'loading': isSuccess }"
-                            :disabled="isSuccess">
+                    <div class="text-right mt-3">
+                        <button class="btn btn-light" style="background-color: #5624d0;color: #fff;" type="submit"
+                            :class="{ 'loading': isSuccess }" :disabled="isSuccess">
                             <span v-if="!isSuccess">Save Profile</span>
                             <span v-else> Saving...<i class="fas fa-spinner fa-spin"></i></span>
                         </button>
@@ -342,7 +336,7 @@ import { useVuelidate } from '@vuelidate/core'
 import { required, minLength, helpers } from "@vuelidate/validators"
 import axios from 'axios'
 import Header from './Header.vue'
-
+import ProfileEditLoading from './components/ProfileEditLoading.vue';
 import { useUserStore } from '@/stores/user'
 
 const userStore = useUserStore()
@@ -358,7 +352,7 @@ const progress = ref('')
 const expertise = ref('')
 const address = ref('')
 const places = ref([])
-const isSuccess = ref(false);
+const isLoading = ref(false);
 
 const containsUser = (value) => {
     //  return value.includes("user")
@@ -406,8 +400,8 @@ const formData = ref({
     lastname: '',
     about: '',
     github: '',
-    experience:'',
-    roleLevel:'',
+    experience: '',
+    roleLevel: '',
     availableDays: [],
     workType: [],
     workPreference: [],
@@ -474,11 +468,8 @@ const formOnSubmit = async () => {
     const result = await v$.value.$validate();
     if (result) {
         // alert('success')
-        isSuccess.value = true
         axios.post('/user/profile', { formData: formData.value }).then((response) => {
             console.log(response.data)
-            isSuccess.value = false
-
         }).catch((error) => {
             console.log(error)
         })
@@ -490,9 +481,12 @@ const formOnSubmit = async () => {
 }
 
 onMounted(() => {
+    isLoading.value = true
     axios.get('/userbased-skills').then((response) => {
         userBasedSkillList.value = response.data
         console.log('skill', response.data)
+        isLoading.value = false
+
     }).catch((error) => {
         console.log('error in fetching skills', error)
     })
@@ -506,6 +500,7 @@ onMounted(() => {
         getUserDetails() //this need to be loaded a bit late then userBasedSkills otherwise our checked for programming does not work
         // this is because our either userBasedSkill[] or below response.data.skills[] will be null array to compare the values, 
         //this makes sure our both arrays has some value to comapre
+
     }, 500);
 
 })
@@ -566,6 +561,7 @@ const updateProfilePicture = (e) => {
 .image-container {
     position: relative;
 }
+
 .image-upload-label {
     display: none;
     position: absolute;
@@ -665,3 +661,4 @@ const updateProfilePicture = (e) => {
     }
 }
 </style>
+<style scoped></style>

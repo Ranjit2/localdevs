@@ -21,6 +21,4 @@ onMounted(() => {
     slug.value = response.data
 })
 });
-
-
 </script>

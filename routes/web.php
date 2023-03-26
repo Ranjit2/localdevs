@@ -56,6 +56,7 @@ Route::get('places',[UserProfileController::class, 'places']);
 //Route::get('/dashboard', [UserProfileController::class, 'dashboard']);
 Route::post('profileImage/upload', [UserProfileController::class, 'uploadToS3']);
 
+Route::post('user/update-experience', [UserProfileController::class, 'updateExperience']);
 
 //Route::get('/user/profile/{user}/edit', [UserProfileController::class, 'edit']);
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
