@@ -47,8 +47,10 @@
 
                     <div class="image-container">
                   
-                        <img class="bordered-image" :src="profileImage" width="90"
+                        <img v-if="profileImage" class="bordered-image" :src="profileImage" width="90"
                             style="border:1px solid #ccc;border-radius: 50%;">
+                        <img v-else src="https://via.placeholder.com/150" alt="User Profile Image"
+                                    class="img-fluid rounded-circle">
                         <label for="image-upload" class="image-upload-label">
                             <i class="fa fa-camera"></i>
                             Upload Image
@@ -344,7 +346,6 @@ const userStore = useUserStore()
 const files = ref([]);
 const myImage = ref(null)
 const profileImage = ref('')
-const previewImage = ref('')
 const status = ref(false)
 const githubFiledErrorMessage = ref('')
 const userBasedSkillList = ref([])//[{}]
@@ -546,14 +547,12 @@ const updateProfilePicture = (e) => {
         },
     }).then((response) => {
         status.value = false
-        profileImage.value = response.data
+        profileImage.value = response.data.url
 
     }).catch((error) => {
         document.getElementById('errorUploadingImage').innerText = 'Error in uploading image';
         console.log(error)
     })
-
-
 }
 </script>
 <style scoped>

@@ -14,6 +14,7 @@ import ProfileEdit from './ProfileEdit.vue'
 import Register from './Register.vue';
 import Dashboard from './Dashboard.vue';
 import Login from './login.vue'
+import Upload from './Upload.vue'
 import store from './store.js'
 
 
@@ -28,4 +29,6 @@ createApp(App).use(router).use(store).mount("#home")
 createApp(ProfileEdit).use(router).use(store).mount("#profile")
 createApp(Register).use(router).use(store).mount("#register")
 createApp(Dashboard).use(router).use(store).mount("#dashboard")
+createApp(Upload).use(router).mount("#upload")
+
 //createApp(Login).use(router).use(store).mount("#login")

@@ -43,10 +43,9 @@
                                 <div class="mt-3">
                                     <span class="fw-bold">Skills: </span>
                                     <div class="btn-group btn-group-sm" role="group" aria-label="Skills"
-                                        v-for="(skill, index) in userData.skillNames" :key="index">
-                                        <button type="button" class="btn" style="background-color: rgb(241, 245, 249); 
-                                                    color: #000;">{{ skill }}
-                                        </button>
+                                    v-for="(skill, index) in userData.skillNames" :key="index">
+                                    <button type="button" class="btn rounded-pill" style="background-color: rgb(241, 245, 249); 
+                                    color: #000; margin-right: 2px;margin-top: 2px;">{{ skill }}</button>
                                     </div>
                                 </div>
 
@@ -243,4 +242,15 @@ const previousPage = () => {
 .form-check-input:checked {
     background-color: #5624d0;
     border-color: #5624d0;
-}</style>
+}
+.btn-light{
+    background-color: #5624d0;
+    border-color: #5624d0;
+    color: #fff;
+}
+.btn-light:hover{
+    background-color: #4d0cef;
+    border-color: #4d0cef;
+    color: #fff;
+}
+</style>

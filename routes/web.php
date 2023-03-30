@@ -55,6 +55,7 @@ Route::get('/user/details', [UserProfileController::class, 'userDetails']);
 Route::get('places',[UserProfileController::class, 'places']);
 //Route::get('/dashboard', [UserProfileController::class, 'dashboard']);
 Route::post('profileImage/upload', [UserProfileController::class, 'uploadToS3']);
+Route::get('upload',[UserProfileController::class, 'index']);
 
 Route::post('user/update-experience', [UserProfileController::class, 'updateExperience']);
 

@@ -6,9 +6,11 @@ use App\Models\Place;
 use App\Models\User;
 use App\Repositories\User\SkillLists;
 use App\Repositories\User\UserProfile;
+use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Facades\Image;
 
 class UserProfileController extends Controller
 {
@@ -39,12 +41,12 @@ class UserProfileController extends Controller
 
         $filteredDaysNullValue = array_filter(explode(",", $user->availableDays), fn ($value) => $value !== '');
         $filteredWorkTypeNullValue = array_filter(explode(",", $user->workType), fn ($value) => $value !== '');
-      
+
         $skillSetIds = [];
         $skillSetNames = [];
         $years = $user->skills()->pluck('year');
 
-        foreach($user->skills as $skill) {
+        foreach ($user->skills as $skill) {
             $skillSetIds[] = $skill['id'];
             $skillSetNames[] = $skill['name'];
         }
@@ -65,9 +67,9 @@ class UserProfileController extends Controller
             'skillNames' => $skillSetNames,
             'skillYears' => $years,
             'profileImage' => $user->profileImage,
-            'workPreference' => explode(',',$user->workPreference), //pass as an array, we can use includes('wfh') in :checked in vuejs 
-            'userSelectedPlaces' => $user->places->map(fn($place) => $place['id'])
-        ]; 
+            'workPreference' => explode(',', $user->workPreference), //pass as an array, we can use includes('wfh') in :checked in vuejs 
+            'userSelectedPlaces' => $user->places->map(fn ($place) => $place['id'])
+        ];
 
         return $details;
     }
@@ -84,34 +86,43 @@ class UserProfileController extends Controller
         return view('profile-edit');
     }
 
-    public function uploadToS3(Request $request)
+    public function uploadToS3(Request $request): JsonResponse
     {
         $request->validate([
-                'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $filename = $image->hashName();
+
+            // Resize the image to a maximum width of 800 pixels
+            $img = Image::make($image->getRealPath())->resize(200, null, function ($constraint) {
+                $constraint->aspectRatio();
+            });
+
+            // Upload the resized image to S3
+            $path = 'images/' . $filename;
+            Storage::disk('s3')->put($path, $img->stream()->__toString());
+
+            // Update the user's profile image URL with the S3 object URL
+            User::where('id', auth()->id())->update([
+                'profileImage' =>  $awsPath = Storage::disk('s3')->url($path)
             ]);
-            if ($request->hasFile('image')) {
-                $file = $request->file('image')->hashName();
-                $path = $request->file('image')->storeAs(
-                    'images', //your s3 images folder
-                    $file,
-                    's3'
-                );
 
-                $s3 = Storage::disk('s3');
+            return response()->json(['url' => $awsPath], Response::HTTP_OK);
+        }
+    }
 
-                User::where('id',auth()->id())->update([
-                    'profileImage' => $awsPath = $s3->url($path)
-                ]);
-
-                return response()->json($awsPath);
-
-         }
+    public function index()
+    {
+        return view('upload');
     }
 
     public function updateExperience(Request $request)
     {
         $user = auth()->user();
-        $user->skills()->updateExistingPivot($request->skillId,['year' => $request->year]);
+        $user->skills()->updateExistingPivot($request->skillId, ['year' => $request->year]);
         $years = $user->skills()->pluck('year');
 
         return response()->json(['yearOfExperiences' => $years]);
