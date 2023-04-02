@@ -21,7 +21,6 @@
                     </div>
 
                     <span class="filter-header" style="background-color: ;color:;">Skills:</span>
-
                     <input type="text" class="form-control" placeholder="Search skills" style="border:1px solid #ccc"
                         @click="showOptionSkills = true">
                     <div class="card mt-1 shadow-sm" v-show="showOptionSkills" style="border: 1px solid #ccc;">
@@ -80,19 +79,20 @@
         <div class="col-md-9 mt-5">
             <div v-if="loading">
                 <HomeLoading />
-               <!-- Loading... -->
+                <!-- Loading... -->
             </div>
             <p v-if="users.length < 1">
                 No users for this skill set found.
             </p>
 
-            <div v-if="!loading" class="card mb-3 shadow-lg" v-for="user in users" style="border: 1px solid #ccc;border-radius: 5px;">
+            <div v-if="!loading" class="card mb-3 shadow-lg" v-for="user in users"
+                style="border: 1px solid #ccc;border-radius: 5px;">
                 <a style="cursor:pointer" data-bs-toggle="offcanvas" :data-bs-target="'#offcanvasUser' + user.id">
                     <div class="card-body shadow-sm">
                         <div class="row">
                             <div class="col-sm-3">
                                 <div class="profile-picture">
-                                    <img src="https://media.licdn.com/dms/image/C5603AQF70zbgVA8ZaA/profile-displayphoto-shrink_400_400/0/1578458553355?e=1683763200&v=beta&t=u3J2MUudOpDfXaORBibR8GCR5ALvW7nxN2L3N9vdr1c"
+                                    <img src="https://profile-image-uploader.s3.amazonaws.com/images/WBqGBdWBoTnSZhRLjuOSMsKBODQErTzXu8vxZaVD.png"
                                         alt="Profile picture" class="rounded-circle">
                                 </div>
                             </div>
@@ -341,8 +341,7 @@ export default {
                             {},
                             null,
                             `?page=${this.pagination.current_page}&dev=${this.filters.dev}&preference=${this.filters.preference
-                            }&experience=${this.filters.experience}&place=${this.filters.place}&skill=${this.filters.skill
-                            }`
+                            }&experience=${this.filters.experience}&place=${this.filters.place}&skill=${this.filters.skill}`
                         );
                     } else {
                         this.initialPageMounted = false;
@@ -373,12 +372,20 @@ export default {
                 this.pagination.current_page++;
                 this.getUsers();
             }
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
         },
         previousPage() {
             if (this.pagination.current_page > 1) {
                 this.pagination.current_page--;
                 this.getUsers();
             }
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
         }
     }
 };
@@ -405,7 +412,7 @@ export default {
 
 </style> -->
 
-<style>
+<style >
 body {
     font-family: 'Open Sans', sans-serif;
 }

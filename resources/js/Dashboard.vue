@@ -1,31 +1,15 @@
 <template>
-    <div id="dashboard mt-5">
+    <div id="dashboard mt-5" class="medium-font">
         <div class="row">
-            <div class="col-md-3">
-                <h3>Dashboard</h3>
-                <div class="list-group">
-                    <router-link class="list-group-item list-group-item-action " to="/dashboard">Dashboard</router-link>
-                    <router-link class="list-group-item list-group-item-action"
-                        :to="'/user/profile/' + slug + '/edit'">Profile</router-link>
-                    <router-link class="list-group-item list-group-item-action" to="/user/expertise">Top
-                        Expertise</router-link>
-                    <router-link class="list-group-item list-group-item-action"
-                        :to="'/user/profile/' + slug + '/edit'">Profile</router-link>
-                    <router-link class="list-group-item list-group-item-action"
-                        :to="'/user/profile/' + slug + '/edit'">Profile</router-link>
-                    <router-link class="list-group-item list-group-item-action"
-                        :to="'/user/profile/' + slug + '/edit'">Profile</router-link>
-                </div>
-                <!-- <Header /> -->
-
+            <div class="col-md-2">
             </div>
-            <div class="col-md-9 ">
-
+            <div class="col-md-10">
+                <Header />
                 <UserDashboardLoading v-if="isLoading" />
                 <div class="card mt-5" v-if="!isLoading">
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-md-2">
+                            <div class="col-md-2 profile-picture">
                                 <img v-if="userData.profileImage" :src="userData.profileImage" alt="User Profile Image"
                                     class="img-fluid rounded-circle">
                                 <img v-else src="https://via.placeholder.com/150" alt="User Profile Image"
@@ -33,19 +17,19 @@
                             </div>
                             <div class="col-md-10">
                                 <h2 class="fw-bold">{{ userData.firstname }}&nbsp;{{ userData.lastname }}</h2>
-                                <i class='fas fa-map-marker-alt' style='font-size:larger ;color:grey'></i>&nbsp;{{
-                                    userData.address }}
+                                <i class='fas fa-map-marker-alt' style='font-size:medium ;color:grey'></i>&nbsp;
+                                {{userData.address }}
                                 <p>{{ userData.about }}</p>
                                 <div class="mt-3">
                                     <span class="fw-bold">Expertise:</span>
                                     {{ userData.expertise }}
                                 </div>
                                 <div class="mt-3">
-                                    <span class="fw-bold">Skills: </span>
+                                    <span class="fw-bold" style="">Skills: </span>
                                     <div class="btn-group btn-group-sm" role="group" aria-label="Skills"
                                     v-for="(skill, index) in userData.skillNames" :key="index">
                                     <button type="button" class="btn rounded-pill" style="background-color: rgb(241, 245, 249); 
-                                    color: #000; margin-right: 2px;margin-top: 2px;">{{ skill }}</button>
+                                    color: #000; margin-right: 2px;margin-top: 2px;font-size: medium">{{ skill }}</button>
                                     </div>
                                 </div>
 
@@ -85,7 +69,7 @@
                                     </div>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="radio" name="sunday" id="sunday"
-                                            value="Sunday" title="Sunday" :disabled="availableDays.includes('Sunday')"
+                                            value="Sunday" title="Sunday"
                                             :checked="availableDays.includes('Sunday')">
                                         <label class="form-check-label" for="sunday">Su</label>
                                     </div>
@@ -94,22 +78,26 @@
                                 <div class="mt-3">
                                     <span class="fw-bold">Work Type: </span>
                                     <button v-for="(work, index) in userData.workType" :key="index" type="button"
-                                        class="btn" style="background-color: rgb(241, 245, 249); color: #000;">{{ work
+                                        class="btn rounded-pill" style="background-color: rgb(241, 245, 249); color: #000;font-size: medium;">{{ work
                                         }}</button>
                                 </div>
                                 <div class="mt-3">
                                     <span class="fw-bold">Work preference: </span>
-                                    <button v-for="(work, index) in userData.workPreference" :key="index" type="button"
-                                        class="btn" style="background-color: rgb(241, 245, 249); color: #000;">{{
-                                            work == 'wfh' ? 'Work from home' : work }}</button>
+                                    <div class="btn-group" role="group">
+                                        <button v-for="(work, index) in userData.workPreference" :key="index" type="button" class="btn rounded-pill"
+                                            style="background-color: rgb(241, 245, 249); color: #000;margin-right: 5px;font-size: medium;">
+                                            {{ work == 'wfh' ? 'Work from home' : work }}
+                                        </button>
+                                    </div>
                                 </div>
+
                                 <div class="mt-3">
                                     <span class="fw-bold">Experience:&nbsp;</span>
                                     <b>{{ userData.experience }}</b> &nbsp;years
                                 </div>
                                 <div class="mt-3">
                                     <span class="fw-bold">Role level:&nbsp;</span>
-                                    {{ userData.roleLevel }} &nbsp;
+                                   <span style="font-size:medium">{{ userData.roleLevel }}</span> &nbsp;
                                 </div>
                             </div>
                         </div>
@@ -117,12 +105,13 @@
                 </div>
 
                 <div v-if="userData.skillNames?.length>0" class="card mt-5" :class="{'animate__animated animate__flipInX': next}">
-                    <div class="card-body text-center">
+                    <div class="card-body" v-if="!isLoading">
+                        <div class="card-title fw-bold">Years of experience</div>
                         <div class="row align-items-center" v-for="(skill, index) in userData.skillNames" :key="index">
                             <div class="col-auto">
                                 <p class="lead mt-2" v-if="currentPage == index">How many years of experience do you have with
-                                    <b style="color: #5624d0;font-size:larger">{{ skill }}</b>? 
-                                    {{ yearOfExperience.length > 0 ? (yearOfExperience[index]==-1?'less then':yearOfExperience[index]) 
+                                    <b style="color: #5624d0;font-size:medium;font-weight: bold;">{{ skill }}</b>? 
+                                    Your answer: {{ yearOfExperience.length > 0 ? (yearOfExperience[index]==-1?'less then':yearOfExperience[index]) 
                                     :(userData.skillYears[index]==-1?'less then':userData.skillYears[index]) }}&nbsp; years
                                 </p>
                             </div>
@@ -147,15 +136,33 @@
                         </div>
                         <div class="row align-items-center">
                             <div class="col-auto">
-                                <button @click="previousPage"  style="background-color: #5624d0;color: #fff;" v-if="currentPage > 0">Previous Question</button>
+                                <button @click="previousPage"  style="background-color: #1d1dff;border-color: #1d1dff;color: #fff;" v-if="currentPage > 0">Previous Question</button>
                             </div>
 
                             <div class="col-auto">
-                                <button @click="nextPage" style="background-color: #5624d0;color: #fff;"
+                                <button @click="nextPage" style="background-color: #1d1dff;border-color: #1d1dff;color: #fff;"
                                     :disabled="currentPage === userData.skillNames?.length - 1">Next Question</button>
                             </div>
                         </div>
                     </div>
+                </div>
+
+                <div class="card mt-5" v-if="!isLoading">
+                    <div class="card-body">
+                        <div class="card-title fw-bold">Education</div>
+                        <div class="col-md-6">
+                        <p>What is your higest level of education ?</p>
+                        <select v-model="education" class="form-select" @change="updateEducation()">
+                            <option value="">Select your experience</option>
+                            <option value="">none</option>
+                            <option value="Diploma">Diploma</option>
+                            <option value="Bachelor">Bachelor Degree</option>
+                            <option value="Master">Master Degree</option>
+                            <option value="PHD">PHD</option>
+                        </select>
+                        <p class="mt-2">Your answer: {{ education }}</p>
+                    </div>
+                </div>
                 </div>
 
 
@@ -186,7 +193,7 @@
 <script setup>
 import Header from './Header.vue'
 import { useUserStore } from '@/stores/user'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import axios from 'axios';
 import Datepicker from 'vue3-datepicker'
 import 'animate.css';
@@ -203,6 +210,7 @@ const year = ref('')
 const yearOfExperience = ref([])
 const currentPage = ref(0);
 const next = ref(false)
+const education = ref('');
 
 onMounted(() => {
     isLoading.value = true
@@ -210,6 +218,7 @@ onMounted(() => {
         userData.value = response.data
         availableDays.value = response.data.availableDays
         slug.value = response.data.slug
+        education.value = response.data.education
         isLoading.value = false
     });
 })
@@ -222,6 +231,14 @@ const updateYear = ((skillId) => {
 
     })
 })
+
+const updateEducation = () => {
+    axios.post('/user/update-education', { education: education.value }).then((response) => {
+      //  education.value = response.data.education
+    }).catch((error) => {
+        alert('error while updating')
+    })
+}
 
 const nextPage = () => {
     currentPage.value++
@@ -237,20 +254,53 @@ const previousPage = () => {
 };
 </script>
 
-<style >
+<style scoped>
+body {
+    font-family: 'Open Sans', sans-serif;
+}
+.card {
+    border: 1px solid #ccc;
+}
+.medium-font {
+  font-size: 16px; /* or any other medium font size you prefer */
+}
+/* input[type="radio"] {
+
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+    border-radius: 4px;
+    outline: none;
+    cursor: pointer;
+} */
 /* Change checked checkbox color to #4a4a4a */
+
 .form-check-input:checked {
-    background-color: #5624d0;
-    border-color: #5624d0;
+    background-color: #1d1dff;
+    border-color: #1d1dff;
 }
 .btn-light{
-    background-color: #5624d0;
-    border-color: #5624d0;
+    background-color: #1d1dff;
+    border-color: #1d1dff;
     color: #fff;
 }
 .btn-light:hover{
-    background-color: #4d0cef;
-    border-color: #4d0cef;
+    background-color: #04045bed;
+    border-color: #04045bed;
     color: #fff;
 }
+
+.profile-picture {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+}
+
+.profile-picture img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border: 3px solid #4a4a4a;
+}
+
 </style>

@@ -18,7 +18,6 @@
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
     <!-- Styles -->
     {{-- <link href="{{ asset('css/app.css') }}" rel="stylesheet"> --}}
 </head>
@@ -57,24 +56,27 @@
                         @endif
                         @else
                         <li class="nav-item dropdown">
-                            <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                 {{ Auth::user()->firstname }}&nbsp;{{ Auth::user()->lastname }}
+                            <a id="navbarDropdown" style="font-size: 18px; color:#1d1dff;" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                {{ Auth::user()->firstname }}&nbsp;{{ Auth::user()->lastname }}
                             </a>
 
-
-                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                            <div class="shadow-lg dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                                 <a class="dropdown-item" href="/dashboard">
-                                    Dashboard
+                                    <i class="fas fa-tachometer-alt me-2" style="color: #1d1dff;"></i> Dashboard
+                                </a>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-cog me-2" style="color: #1d1dff;"></i> Account Settings
                                 </a>
                                 <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                    {{ __('Logout') }}
+                                document.getElementById('logout-form').submit();">
+                                    <i class="fas fa-sign-out-alt me-2" style="color: #1d1dff;"></i> {{ __('Logout') }}
                                 </a>
 
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                     @csrf
                                 </form>
                             </div>
+
                         </li>
                         @endguest
                     </ul>
@@ -96,5 +98,19 @@
         color:#fff!important;
 
     } */
+    .dropdown-menu {
+        width: 300px;
+        /* adjust as needed */
+        /* height: 300px; */
+        line-height: 2;
+        font-size: 18px;
+        border-radius: 10px;
+    }
+
+    .dropdown-item:hover {
+        background-color: #f8f9fa;
+        /* adjust as needed */
+    }
 </style>
+
 </html>

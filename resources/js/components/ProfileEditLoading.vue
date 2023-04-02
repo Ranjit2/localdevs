@@ -3,12 +3,17 @@
     <div class="row justify-content-center rounded bg-white">
 
         <div class="col-md-10">
-            <div class="row mt-2 skeleton-loading">
-                <div class="col-md-2">
-                    <div class="skeleton-profile-image"></div>
+            <div class="col-md-10">
+                <div class="row ">
+                    <div class="col-md-6"></div>
+                    <div class="col-md-2 row mt-2">
+                        <div class="col-md-12 d-flex justify-content-center">
+                            <div class="skeleton-profile-image"></div>
+                        </div>
+                    </div>
                 </div>
-
             </div>
+
 
             <div class="row mt-2 ">
                 <div class="col-md-6" id="firstname">
@@ -91,7 +96,7 @@
 
 <style scoped>
 .skeleton-profile-image {
-    margin-left: 350px;
+    justify-content: center;
     width: 100%;
     height: 100px;
     border-radius: 50%;
@@ -208,4 +213,5 @@
     100% {
         opacity: 0.2;
     }
-}</style>
+}
+</style>

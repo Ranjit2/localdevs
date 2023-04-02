@@ -60,6 +60,7 @@ class UserProfileController extends Controller
             'expertise' => $user->expertise,
             'userAddress' => $user->address,
             'experience' => $user->experience,
+            'education' => $user->education,
             'roleLevel' => $user->roleLevel,
             'availableDays' => array_values($filteredDaysNullValue),
             'workType' => array_values($filteredWorkTypeNullValue),
@@ -114,18 +115,20 @@ class UserProfileController extends Controller
         }
     }
 
-    public function index()
-    {
-        return view('upload');
-    }
-
     public function updateExperience(Request $request)
     {
         $user = auth()->user();
         $user->skills()->updateExistingPivot($request->skillId, ['year' => $request->year]);
         $years = $user->skills()->pluck('year');
 
-        return response()->json(['yearOfExperiences' => $years]);
+        return response()->json(['yearOfExperiences' => $years], Response::HTTP_OK);
+    }
+
+    public function updateEducation(Request $request)
+    {
+        $education = User::where('id', auth()->id())->update(['education' => $request->education]);
+
+        return response()->json('success', Response::HTTP_OK);
     }
 
     public function dashboard()

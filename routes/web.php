@@ -25,7 +25,13 @@ use Illuminate\Support\Facades\Route;
  * include ->middleware('verified') in route
  * now laravel will automatically send email
  */
-
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+ 
+Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+    $request->fulfill();
+ 
+    return redirect('/home');
+})->middleware(['auth', 'signed'])->name('verification.verify');
 Route::get('/', function () {
 
     // if (auth()->user()->email_verified_at == '') {
@@ -56,11 +62,13 @@ Route::get('places',[UserProfileController::class, 'places']);
 //Route::get('/dashboard', [UserProfileController::class, 'dashboard']);
 Route::post('profileImage/upload', [UserProfileController::class, 'uploadToS3']);
 Route::get('upload',[UserProfileController::class, 'index']);
+Route::post('user/update-education',[UserProfileController::class, 'updateEducation']);
 
 Route::post('user/update-experience', [UserProfileController::class, 'updateExperience']);
 
 //Route::get('/user/profile/{user}/edit', [UserProfileController::class, 'edit']);
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home')->middleware('verified');
+
 
 //Route::get('/home2', [App\Http\Controllers\HomeController::class, 'home2'])->name('home2');
 

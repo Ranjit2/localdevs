@@ -25,7 +25,6 @@ class UserProfile {
 
         //join loggedIn userid and days and look from pivot table and get days 
         // need logic here
-   //     dd($data['userSelectedPlaces']);
         $this->user->where('id', $user->id)->update([
             'firstname' => $data['firstname'],
             'lastname' => $data['lastname'],
@@ -34,7 +33,8 @@ class UserProfile {
             'availableDays' => implode(",",$data['availableDays']),
             'workType' => implode(",",$data['workType']),
             'workPreference' => implode(",",$data['workPreference']),
-            'experience' => $data['experience']
+            'experience' => $data['experience'],
+            'address' => $data['search'],
         ]);
 
         $user->skills()->syncWithoutDetaching($data['userSelectedSkills']);

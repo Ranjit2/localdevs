@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 class RegisterController extends Controller
@@ -51,10 +53,17 @@ class RegisterController extends Controller
     {
         $data = $data['formData'];
         return Validator::make($data, [
-         //   'name' => ['required', 'string', 'max:255'],
+            'firstName' => ['required', 'string', 'max:255'],
+            'lastName' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-           // 'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'password' => ['required', 'string', 'min:8'],
+            'expertise' => 'required|in:designer,developer,motion,pm',
         ]);
+        // return Validator::make($data, [
+        //     'name' => ['required', 'string', 'max:255'],
+        //     'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+        //     'password' => ['required', 'string', 'min:8', 'confirmed'],
+        // ]);
     }
 
     /**
@@ -65,6 +74,7 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+       // dd(Str::uuid());
        // $data = $data['formData'];
         return User::create([
             //'name' => $data['formData']['m'],
@@ -73,8 +83,19 @@ class RegisterController extends Controller
             'email' => $data['formData']['email'],
             'password' => Hash::make($data['formData']['password']),
             'expertise'=> $data['formData']['expertise'],
-            'slug' =>  Str::slug($fn.$ln)
+            'slug' =>  Str::uuid()
         ]);
+
+        // event(new Registered($user));
+
+        // Auth::login($user);
+
+        // return redirect(RouteServiceProvider::HOME);
+        // return User::create([
+        //     'name' => $data['name'],
+        //     'email' => $data['email'],
+        //     'password' => Hash::make($data['password']),
+        // ]);
 
     }
 }
