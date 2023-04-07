@@ -87,7 +87,9 @@ class TalentFilterController extends Controller
     {
         $user = $user->where('slug', $slug)->first();
         $user = $user->load('skills');
-        return view('user-profile', compact('user'));
+        $days = explode(",", $user->availableDays);
+
+        return view('user-profile', compact('user','days'));
     }
 
     public function skills()

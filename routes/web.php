@@ -46,6 +46,17 @@ Route::get('/forHeader', function() {
     return User::where('id',auth()->id())->first()->slug;
 });
 
+// routes/web.php
+
+//use App\Http\Controllers\Auth\PasswordlessLoginController;
+
+// Route::get('/login', [PasswordlessLoginController::class, 'showLoginForm'])->name('login');
+// Route::post('/login', [PasswordlessLoginController::class, 'sendMagicLink'])->name('passwordless.login');
+// Route::get('/login/{user}', [PasswordlessLoginController::class, 'authenticate'])->name('passwordless.authenticate');
+// Route::post('/logout', [PasswordlessLoginController::class, 'logout'])->name('logout');
+
+
+
 Route::get('filter/talents', [TalentFilterController::class, 'index']);
 Route::get('skills', [TalentFilterController::class, 'skills']);
 Route::get('design', [TalentFilterController::class, 'design']);

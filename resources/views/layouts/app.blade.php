@@ -17,7 +17,7 @@
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" />
+    <!-- <link rel="stylesheet" href="{{asset('css/fonts/font.css')}}"/> -->
     <!-- Styles -->
     {{-- <link href="{{ asset('css/app.css') }}" rel="stylesheet"> --}}
 </head>
@@ -27,7 +27,8 @@
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
+                    <!-- <span style="color:#1d1dff" class="fw-bold">{{ config('app.name', 'Laravel') }}</span> -->
+                    <span class="logo-lg"><img src="/Corporate Tech Computer Logo (1).png" class="img-responsive" width="130" ></span>
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
@@ -56,20 +57,20 @@
                         @endif
                         @else
                         <li class="nav-item dropdown">
-                            <a id="navbarDropdown" style="font-size: 18px; color:#1d1dff;" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                {{ Auth::user()->firstname }}&nbsp;{{ Auth::user()->lastname }}
+                            <a id="navbarDropdown" style="font-size: 18px; color:#000;" class="fw-bold nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                <span class="">{{ Auth::user()->firstname }} {{ Auth::user()->lastname }}</span>
                             </a>
 
                             <div class="shadow-lg dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                                 <a class="dropdown-item" href="/dashboard">
-                                    <i class="fas fa-tachometer-alt me-2" style="color: #1d1dff;"></i> Dashboard
+                                    <i class="bi bi-speedometer" style="color: #1d1dff;"></i> Dashboard
                                 </a>
                                 <a class="dropdown-item" href="#">
-                                    <i class="fas fa-cog me-2" style="color: #1d1dff;"></i> Account Settings
+                                    <i class="bi bi-gear" style="color: #1d1dff;"></i> Account Settings
                                 </a>
                                 <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
                                 document.getElementById('logout-form').submit();">
-                                    <i class="fas fa-sign-out-alt me-2" style="color: #1d1dff;"></i> {{ __('Logout') }}
+                                    <i class="bi bi-box-arrow-in-left" style="color: #1d1dff;"></i> {{ __('Logout') }}
                                 </a>
 
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
@@ -90,6 +91,10 @@
     </div>
 </body>
 <style>
+    body{
+        font-family: 'Nunito';
+        font-size: 16px;
+    }
     /* .navbar {
         background-color: navy!important;
         height: 90px!important;

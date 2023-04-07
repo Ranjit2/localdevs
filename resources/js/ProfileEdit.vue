@@ -29,14 +29,14 @@
                                 class="img-fluid rounded-circle">
                             <label for="image-upload" class="image-upload-label">
                                 <i class="fa fa-camera"></i>
-                                Upload Image
+                                Upload Image Restricted
                             </label>
-                            <input type="file" ref="myImage" id="image-upload" class="image-upload-input"
-                                @change="updateProfilePicture()">
+                            <!-- <input type="file" ref="myImage" id="image-upload" class="image-upload-input"
+                                @change="updateProfilePicture()"> -->
                         </div>
 
-                        <span class="font-weight-bold">{{ formData.firstname }}&nbsp;{{ formData.lastname }}</span>
-                        <span class="text-black-50">{{ expertise }}</span>
+                        <span class="" style="font-size: 18px;">{{ formData.firstname }}&nbsp;{{ formData.lastname }}</span>
+                        <span class="fw-bold">{{ expertise }}</span>
                         <span>{{ address }}</span>
                     </div>
                     <form @submit.prevent="formOnSubmit" method="POST">

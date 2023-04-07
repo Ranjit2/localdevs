@@ -16,7 +16,7 @@ import Dashboard from './Dashboard.vue';
 import Login from './login.vue'
 import Upload from './Upload.vue'
 import store from './store.js'
-
+import "bootstrap-icons/font/bootstrap-icons.css" 
 
 const router = createRouter({
     history: createWebHistory(),
