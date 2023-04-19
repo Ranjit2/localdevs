@@ -1,71 +1,83 @@
 <template>
-    <h1 class="mt-5 text-center animate__animated animate__zoomInUp">👋Hello there! Join Codermandu</h1>
-    <form @submit.prevent="submitForm">
-        <div class="card mt-3 animate__animated animate__zoomInUp">
-            <div class="card-body">
-                <div class="row justify-content-center">
-                    <div class="col-md-4">
-                        <label for="firstName">First Name</label>
-                        <input type="text" class="form-control" id="firstName" v-model="formData.firstName">
+    <div class="container mt-3">
+        <h1 class=" animate__animated animate__zoomInUp">👋Hello there! Join Codermandu</h1>
+
+      <div class="row">
+        <div class="col-lg-6  mt-5 mb-4 mb-lg-0 animate__animated animate__zoomInUp">
+          <img src="/img/it-engineer-working-with-his-pc.jpg" class="img-fluid">
+        </div>
+        <div class="col-lg-6 mt-5">
+          <form @submit.prevent="submitForm">
+            <div class="card animate__animated animate__zoomInUp" style="min-height: 420px;">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="firstName">First Name</label>
+                       <input type="text" class="form-control" id="firstName" v-model="formData.firstName">
                         <span v-for="error in v$.firstName.$errors" :key="error.$uid" class="error-red">
                             {{ error.$message }}
                         </span>
                     </div>
-                    <div class="col-md-4">
-                        <label for="lastName">Last Name</label>
-                        <input type="text" class="form-control" id="lastName" v-model="formData.lastName">
-                        <span v-for="error in v$.lastName.$errors" :key="error.$uid" class="error-red">
-                            {{ error.$message }}
-                        </span>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="lastName">Last Name</label>
+                      <input type="text" class="form-control" id="lastName" v-model="formData.lastName">
+                      <span v-for="error in v$.lastName.$errors" :key="error.$uid" class="error-red">
+                        {{ error.$message }}
+                      </span>
                     </div>
+                  </div>
                 </div>
-                <div class="row justify-content-center mt-2">
-                    <div class="col-md-4">
-                        <label for="email">Email address</label>
-                        <input type="email" name="email" class="form-control" id="email" v-model="formData.email">
-                        <span v-for="error in v$.email.$errors" :key="error.$uid" class="error-red">
-                            {{ error.$message }}
-                        </span>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group mt-2">
+                      <label for="email">Email address</label>
+                      <input type="email" name="email" class="form-control" id="email" v-model="formData.email">
+                      <span v-for="error in v$.email.$errors" :key="error.$uid" class="error-red">
+                        {{ error.$message }}
+                      </span>
                     </div>
-                    <div class="col-md-4">
-                        <label for="password">Password</label>
-                        <input type="password" class="form-control" id="password" v-model="formData.password">
-                        <span v-for="error in v$.password.$errors" :key="error.$uid" class="error-red">
-                            {{ error.$message }}
-                        </span>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group mt-2">
+                      <label for="password">Password</label>
+                      <input type="password" class="form-control" id="password" v-model="formData.password">
+                      <span v-for="error in v$.password.$errors" :key="error.$uid" class="error-red">
+                        {{ error.$message }}
+                      </span>
                     </div>
+                  </div>
                 </div>
-                <div class="row justify-content-center mt-2">
-                    <div class="col-md-8">
-                        <label for="password">What best describes you ?</label><br>
-                        <div class="form-check form-check-inline mt-1" v-for="talent in talents">
-                            <input type="radio" class="form-check-input" :id="talent.name"
-                                v-model="formData.expertise" :value="talent.short">
-                            <label class="form-check-label" :for="talent.name">{{ talent.name }}</label>
-                        </div>
-                        <br>
-                        <span v-for="error in v$.expertise.$errors" :key="error.$uid" class="error-red ">
-                            {{ error.$message }}
-                        </span>
-                    </div>
+                <div class="form-group mt-2">
+                  <label for="expertise">What best describes you?</label><br>
+                  <div class="form-check form-check-inline mt-2" v-for="talent in talents">
+                    <input type="radio" class="form-check-input" :id="talent.name"
+                      v-model="formData.expertise" :value="talent.short">
+                    <label class="form-check-label" :for="talent.name">{{ talent.name }}</label>
+                  </div>
+                  <br>
+                  <span v-for="error in v$.expertise.$errors" :key="error.$uid" class="error-red">
+                    {{ error.$message }}
+                  </span>
                 </div>
-
                 <div class="text-center mt-5">
                     <button v-if="!isProcessing" type="submit" class="btn btn-lg btn-light" @click="validateSubmission">
                         Join CoderMandu
                     </button>
-                  
-                    <button v-else type="submit" class="btn btn-lg btn-light" disabled>
-                        <i class="fa fa-spinner fa-spin"></i>
-                        <span>Processing...</span>
-                    </button>
-                    <br><br>
-                    <a class="mt-5" href="">Looking to hire?</a>
+                  <button v-else type="submit" class="btn btn-lg btn-light" disabled>
+                    <i class="fa fa-spinner fa-spin"></i>
+                    <span>Sending email...</span>
+                  </button>
                 </div>
+              </div>
             </div>
+          </form>
         </div>
-    </form>
-</template>
+      </div>
+    </div>
+  </template>
 
 <script setup>
 import { ref, computed } from 'vue';

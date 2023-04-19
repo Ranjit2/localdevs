@@ -5,8 +5,9 @@
             </div>
             <div class="col-md-10">
                 <Header />
+                <h3>Dashboard</h3>
                 <UserDashboardLoading v-if="isLoading" />
-                <div class="card mt-5" v-if="!isLoading">
+                <div class="card mt-2" v-if="!isLoading">
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-2 profile-picture">

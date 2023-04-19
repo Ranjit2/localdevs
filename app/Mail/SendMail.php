@@ -8,9 +8,8 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\URL;
 
-class PasswordlessLogin extends Mailable
+class SendMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -20,12 +19,7 @@ class PasswordlessLogin extends Mailable
      * @return void
      */
 
-    public $url;
-
-    public function __construct($url)
-    {
-        $this->url = $url;
-    }
+    public function __construct(public string $url) {}
 
     /**
      * Get the message envelope.
@@ -47,7 +41,7 @@ class PasswordlessLogin extends Mailable
     public function content()
     {
         return new Content(
-            view: 'emails.passwordless-login',
+            markdown: 'emails.sendlink',
         );
     }
 
@@ -60,5 +54,4 @@ class PasswordlessLogin extends Mailable
     {
         return [];
     }
-
 }

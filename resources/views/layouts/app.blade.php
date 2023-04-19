@@ -24,7 +24,7 @@
 
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+        <nav class="navbar navbar-expand-md navbar-light bg-white ">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
                     <!-- <span style="color:#1d1dff" class="fw-bold">{{ config('app.name', 'Laravel') }}</span> -->
@@ -43,6 +43,9 @@
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ms-auto">
                         <!-- Authentication Links -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('devs-talks') }}">{{ __('Devs Meetup') }}</a>
+                        </li>
                         @guest
                         @if (Route::has('login'))
                         <li class="nav-item">
@@ -51,9 +54,27 @@
                         @endif
 
                         @if (Route::has('register'))
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+                        <li class="nav-item dropdown">
+                            <a id="navbarDropdown" style="font-size: 18px; color:#000;" class="fw-bold nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                <span class="">Register</span>
+                            </a>
+
+                            <div class="shadow-lg dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="/user/register">
+                                   <!-- <img src="{{asset('img/dev.png')}}" style="width: 25; height:25px;"> -->
+                                   Register as a Developer
+                                </a>
+                                <a class="dropdown-item" href="/company/register">
+                                <!-- <img src="{{asset('img/company.png')}}" style="width: 25; height:25px;"> -->
+                                 Register as a Company
+                                </a>
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                    @csrf
+                                </form>
+                            </div>
+
                         </li>
+
                         @endif
                         @else
                         <li class="nav-item dropdown">
@@ -63,14 +84,14 @@
 
                             <div class="shadow-lg dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                                 <a class="dropdown-item" href="/dashboard">
-                                    <i class="bi bi-speedometer" style="color: #1d1dff;"></i> Dashboard
+                                    <i class="bi bi-house-door-fill" style="color: #1d1dff;"></i> Dashboard
                                 </a>
                                 <a class="dropdown-item" href="#">
-                                    <i class="bi bi-gear" style="color: #1d1dff;"></i> Account Settings
+                                    <i class="bi bi-gear-fill" style="color: #1d1dff;"></i> Account Settings
                                 </a>
                                 <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
                                 document.getElementById('logout-form').submit();">
-                                    <i class="bi bi-box-arrow-in-left" style="color: #1d1dff;"></i> {{ __('Logout') }}
+                                    <i class="bi bi-arrow-left-circle-fill" style="color: #1d1dff;"></i> {{ __('Logout') }}
                                 </a>
 
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">

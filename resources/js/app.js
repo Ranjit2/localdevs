@@ -16,6 +16,7 @@ import Dashboard from './Dashboard.vue';
 import Login from './login.vue'
 import Upload from './Upload.vue'
 import store from './store.js'
+import RegisterCompany from './RegisterCompany.vue'
 import "bootstrap-icons/font/bootstrap-icons.css" 
 
 const router = createRouter({
@@ -28,6 +29,7 @@ createApp(App).use(router).use(store).mount("#home")
 createApp(App).use(router).use(store).mount("#home")
 createApp(ProfileEdit).use(router).use(store).mount("#profile")
 createApp(Register).use(router).use(store).mount("#register")
+createApp(RegisterCompany).use(router).use(store).mount("#register-company")
 createApp(Dashboard).use(router).use(store).mount("#dashboard")
 createApp(Upload).use(router).mount("#upload")
 

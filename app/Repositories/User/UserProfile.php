@@ -37,8 +37,8 @@ class UserProfile {
             'address' => $data['search'],
         ]);
 
-        $user->skills()->syncWithoutDetaching($data['userSelectedSkills']);
-        $user->places()->syncWithoutDetaching(($data['userSelectedPlaces']));
+        $user->skills()->sync($data['userSelectedSkills']);
+        $user->places()->sync(($data['userSelectedPlaces']));
 
     }
 

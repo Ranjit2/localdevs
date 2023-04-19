@@ -106,4 +106,5 @@ class TalentFilterController extends Controller
     {
         return view('talent.register');
     }
+
 }

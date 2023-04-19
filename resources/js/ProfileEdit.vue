@@ -5,7 +5,8 @@
     <div class="row justify-content-center" v-if="!isLoading">
         <div class="col-md-10">
             <Header />
-            <div class="card">
+            <h3>Profile</h3>
+            <div class="card mt-2">
                 <div class="card-body">
                     <div class="card-title">
                         <h4 class="text-center" style="color:#000082">Make your profile outstanding</h4>
@@ -222,9 +223,11 @@
                                         CMS
                                         &
                                         Mobile Development</b>
-                                </label><br>
+                                </label>
+                                <div class="col-md-3"><input type="text" class="form-control" v-model="filter" placeholder="Search skill"></div>
+                                <br>
                                 <div class="form-check form-check-inline"
-                                    v-for="(framework, index) in userBasedSkillList.framework">
+                                    v-for="(framework, index) in filteredFrameworks">
                                     <input type="checkbox" class="form-check-input" v-model="formData.userSelectedSkills"
                                         :checked="formData.userSelectedSkills.includes(framework)" :value="index"
                                         :id="framework" />
@@ -346,7 +349,6 @@ import Header from './Header.vue'
 import ProfileEditLoading from './components/ProfileEditLoading.vue';
 import { useUserStore } from '@/stores/user'
 
-const userStore = useUserStore()
 
 const files = ref([]);
 const myImage = ref(null)
@@ -360,6 +362,7 @@ const address = ref('')
 const places = ref([])
 const isLoading = ref(false);
 const showOptionPlaces = ref(false)
+const filter = ref('');
 const districts = ref([
     "Achham",
     "Arghakhanchi",
@@ -510,7 +513,7 @@ const formData = ref({
     skills: [],
     userSelectedSkills: [],
     userSelectedPlaces: [],
-    search:''
+    search: ''
 })
 
 const onlyString = () => {
@@ -587,7 +590,7 @@ onMounted(() => {
     isLoading.value = true
     axios.get('/userbased-skills').then((response) => {
         userBasedSkillList.value = response.data
-        console.log('skill', response.data)
+        console.log('userBasedSkillList', userBasedSkillList.value)
         isLoading.value = false
 
     }).catch((error) => {
@@ -657,7 +660,16 @@ const updateProfilePicture = (e) => {
         console.log(error)
     })
 }
+
+const filteredFrameworks = computed(() => {
+    const filtered = Object.entries(userBasedSkillList.value.framework)
+        .filter(([key, value]) =>
+          value.toLowerCase().includes(filter.value.toLowerCase())
+        );
+      return Object.fromEntries(filtered);
+    });
 </script>
+
 <style scoped>
 /**upload profile pic */
 .image-container {
