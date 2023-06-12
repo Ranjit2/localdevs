@@ -1,5 +1,6 @@
 <template>
-    <h1 class="mt-5 text-center animate__animated animate__zoomInUp">👋Hello there! </h1>
+    <h1 class="mt-5 text-center animate__animated animate__zoomInUp"></h1>
+    <h5 class="text-center">Create a company account and start hiring talented Nepali developers. </h5>
     <form @submit.prevent="submitForm">
         <div class="card mt-3 animate__animated animate__zoomInUp">
             <div class="card-body">
@@ -255,6 +256,13 @@ const submitForm = () => {
     color: red;
 }
 
+.form-check-label:hover {
+    background-color: #f5f5f5;
+    cursor: pointer;
+}
+.card {
+    border: none;
+}
 .btn-light {
     background-color: #1d1dff;
     border-color: #1d1dff;

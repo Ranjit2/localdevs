@@ -1,5 +1,7 @@
 <template>
     <div class="row justify-content-center">
+        <Header />
+
         <div class="col-md-8 mt-3">
             <div class="d-flex align-items-center">
                 <h4 class="me-auto">Add your top expertise here</h4>
@@ -70,6 +72,7 @@
     </div>
 </template>
 <script>
+import Header from './Header.vue'
 export default {
     data() {
         return {

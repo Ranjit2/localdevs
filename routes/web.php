@@ -46,10 +46,13 @@ Route::get('/forHeader', function() {
     return User::where('id',auth()->id())->first()->slug;
 });
 
+
+
 // routes/web.php
 
 use App\Http\Controllers\Auth\PasswordlessAuthenticationController;
 use App\Http\Controllers\BusinessController;
+use App\Http\Controllers\MessageController;
 
 // Route::get('/login', [PasswordlessLoginController::class, 'showLoginForm'])->name('login');
 // Route::post('/login', [PasswordlessAuthenticationController::class, 'sendLink'])->name('passwordless.login');
@@ -73,15 +76,31 @@ Route::post('/company/register', [BusinessController::class, 'postCompanyRegiste
 Route::post('/user/profile', [UserProfileController::class, 'store']);
 Route::get('/userbased-skills', [UserProfileController::class, 'findSkillListsForloggedInUser']);
 Route::get('/user/details', [UserProfileController::class, 'userDetails']);
+Route::post('/user/additional/skills', [UserProfileController::class, 'additionalSkills']);
+Route::get('/user/additional/skills', [UserProfileController::class, 'getAdditionalSkills']);
+Route::post('/delete/user/additional/skills', [UserProfileController::class, 'deleteAdditionalSkills']);
+
 Route::get('places',[UserProfileController::class, 'places']);
-//Route::get('/dashboard', [UserProfileController::class, 'dashboard']);
+//Route::get('/user/dashboard', [UserProfileController::class, 'dashboard']);
 Route::post('profileImage/upload', [UserProfileController::class, 'uploadToS3']);
 Route::get('upload',[UserProfileController::class, 'index']);
 Route::post('user/update-education',[UserProfileController::class, 'updateEducation']);
 Route::post('user/update-experience', [UserProfileController::class, 'updateExperience']);
+Route::post('user/social', [UserProfileController::class, 'social']);
+Route::get('get-user-social', [UserProfileController::class, 'getSocial']);
+Route::post('user/employment/history', [UserProfileController::class, 'employment']);
+Route::get('user/employment/history', [UserProfileController::class, 'getEmploymentHistory']);
+Route::post('delete/employment/history', [UserProfileController::class, 'deleteEmploymentHistory']);
+
 //Route::get('/user/profile/{user}/edit', [UserProfileController::class, 'edit']);
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home')->middleware('verified');
 
+
+Route::view('message','message');
+//Route::get('/messages', [MessageController::class, 'fetchMessages']);
+Route::post('/messages', [MessageController::class, 'store']);
+Route::get('/users', [MessageController::class, 'fetchUsers']);
+Route::get('/messages/show/{receiverId}', [MessageController::class, 'show']);
 
 
 Route::get('/user/role',function() {

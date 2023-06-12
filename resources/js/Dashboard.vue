@@ -1,11 +1,9 @@
 <template>
-    <div id="dashboard mt-5" class="medium-font">
-        <div class="row">
-            <div class="col-md-2">
-            </div>
+    <div class="container">
+        <div class="row justify-content-center">
             <div class="col-md-10">
                 <Header />
-                <h3>Dashboard</h3>
+                <h3 class="mt-3">Dashboard</h3>
                 <UserDashboardLoading v-if="isLoading" />
                 <div class="card mt-2" v-if="!isLoading">
                     <div class="card-body">
@@ -18,9 +16,12 @@
                             </div>
                             <div class="col-md-10">
                                 <h2 class="fw-bold lead">{{ userData.firstname }}&nbsp;{{ userData.lastname }}</h2>
-                                <i class='bi bi-geo-alt-fill' style='font-size:large ;color:#1d1dff'></i>
-                                 <span class="lead" style="font-weight:bolder;">{{userData.address }}</span>
-                                <p class="lead">{{ userData.about }}</p>
+                                
+                                 <p class="lead" style="font-weight:bold;">
+                                    <i class='bi bi-geo-alt-fill' style='font-size:large ;color:#1d1dff'></i>
+                                    <b>{{userData.address }}</b>
+                                </p>
+                                <p class="lead" style="text-align: justify;">{{ userData.about }}</p>
                                 <div class="mt-3 lead">
                                     <span class="fw-bold">Expertise:</span>
                                     {{ userData.expertise }}
@@ -100,26 +101,24 @@
                                     <span class="fw-bold">Role level:&nbsp;</span>
                                    <span class="lead" style="font-size:large">{{ userData.roleLevel }}</span> &nbsp;
                                 </div>
-                            </div>
-                        </div>
+                            </div></div>
                     </div>
                 </div>
+            
 
-                <div v-if="userData.skillNames?.length>0" class="card mt-5" :class="{'animate__animated animate__flipInX': next}">
+            <div v-if="userData.skillNames?.length>0" class="card mt-5" :class="{'animate__animated animate__flipInX': next}">
                     <div class="card-body" v-if="!isLoading">
                         <div class="card-title fw-bold lead"><i class="bi bi-clock-fill" style="color: #1d1dff"></i> Years of experience</div>
                         <div class="row align-items-center" v-for="(skill, index) in userData.skillNames" :key="index">
                             <div class="col-auto">
-                                
                                 <p class="lead mt-2" v-if="currentPage == index">How many years of experience do you have with
-                                    <b style="color: #5624d0;font-size:medium;font-weight: bold;">{{ skill }}</b>? 
-
+                                    <b style="color: #5624d0;font-size:medium;font-weight: bold;font-size: 20px;">{{ skill }}</b>? 
                                     Your answer: {{ yearOfExperience.length > 0 ? (yearOfExperience[index]==-1?'less then':yearOfExperience[index]) 
                                     :(userData.skillYears[index]==-1?'less then':userData.skillYears[index]) }}&nbsp; years
                                 </p>
                             </div>
 
-                            <div class="col-auto" v-if="currentPage == index">
+                            <div class="col-md-3" v-if="currentPage == index">
                                 <select v-model="year" class="form-control" @change="updateYear(userData.skills[index])">
                                     <option value="">Select your experience</option>
                                     <option value="-1">Less than 1 year</option>
@@ -135,22 +134,30 @@
                                     <option value="10+">More than 10 years</option>
                                 </select>
                             </div>
+                            <p v-if="currentPage == index">
+                                <span v-if="userData.skillYears[index]>0">
+                                    <a href="#">Add/Update</a>
+                                </span>
+                            </p>
+
                         </div>
                         <p v-if="isLoadingExperience"  style="color:#1d1dff ;"> 
                             <i class="fa fa-spinner fa-spin"></i> Updating your experience...  
                         </p>
+                
                         <div class="row align-items-center">
                             <div class="col-auto">
-                                <button @click="previousPage"  style="background-color: #1d1dff;border-color: #1d1dff;color: #fff;" v-if="currentPage > 0"><i class="bi bi-arrow-left-circle"></i>Previous Question</button>
+                                <button @click="previousPage" style="background-color: #1d1dff;border-color: #1d1dff;color: #fff;" v-if="currentPage > 0"><i class="bi bi-arrow-left-circle"></i>Previous Question</button>
+                                &nbsp;
                             </div>
 
                             <div class="col-auto">
-                                <button @click="nextPage" style="background-color: #1d1dff;border-color: #1d1dff;color: #fff;"
+                                <button @click="nextPage" style="background-color: #1d1dff;border-color: #1d1dff;color: #fff;margin-left: -25px;"
                                     :disabled="currentPage === userData.skillNames?.length - 1">Next Question<i class="bi bi-arrow-right-circle"></i></button>
                             </div>
                         </div>
                     </div>
-                </div>
+            </div>
 
                 <div class="card mt-5" v-if="!isLoading">
                     <div class="card-body lead">
@@ -170,34 +177,12 @@
                             <i class="fa fa-spinner fa-spin"></i> Updating your answer...  
                         </p>
                         <span class="mt-2">Your answer: {{  education }}</span>
-                      
                     </div>
                 </div>
-                </div>
-
-
-                <!-- <div class="card mt-5" v-if="!isLoading">
-                    <div class="card-body text-center">
-                        <p class="lead">Your profile is live and you are availble for a work</p>
-                        <p>If you are not availble for a certain time then please select the data and save it</p>
-                    </div>
-                </div> -->
-                <!-- <div class="card mt-2" v-if="!isLoading">
-                    <div class="card-body text-center" style="min-height: 300px;">
-                        <div class="row">
-                            <div class="col-md-4"></div>
-                            <div class="col-md-3">
-                                <Datepicker v-model="picked" class="form-control" />
-                            </div>
-                            <div class="col-md-1">
-                                <button class="btn btn-primary">Save</button>
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
             </div>
-        </div>
+         </div>
     </div>
+</div>
 </template>
 
 <script setup>
@@ -223,15 +208,18 @@ const next = ref(false)
 const education = ref('');
 const isLoadingEducation = ref(false)
 const isLoadingExperience = ref(false)
+const showAddDescriptionLink = ref(false)
 
 onMounted(() => {
     isLoading.value = true
+
     axios.get('/user/details').then((response) => {
         userData.value = response.data
         availableDays.value = response.data.availableDays
         slug.value = response.data.slug
         education.value = response.data.education
         isLoading.value = false
+
     });
 })
 
@@ -240,8 +228,9 @@ const updateYear = ((skillId) => {
     axios.post('/user/update-experience', { skillId: skillId, year: year.value }).then((response) => {
         yearOfExperience.value = response.data.yearOfExperiences
         isLoadingExperience.value = false
+        showAddDescriptionLink.value = true
     }).catch((error) => {
-        alert('error while updating experience')
+        alert('error while updating experience. please refresh the page and try again')
     })
 })
 

@@ -1,9 +1,17 @@
 <template>
+    <!-- <div class="container-fluid">
+        <div class="hero-section">           
+        <div class="centered"></div>
+            <p class="text-center mt-3 lead">Explore among all nepali developers looking for their next great adventure.
+                <br/> Use the filters to narrow your search better.</p>
+        </div>
+    </div> -->
+<div class="container">
     <div class="row">
         <div>
             <!-- <h3 class="text-center">Find your ideal talent quickly</h3> -->
         </div>
-        <div class="col-md-3 mt-5">
+        <div class="col-md-3 mt-0">
             <div class="card shadow-sm">
                 <div class="card-body">
                     <!--  filters -->
@@ -76,7 +84,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-9 mt-5">
+        <div class="col-md-9 mt-0">
             <div v-if="loading">
                 <HomeLoading />
                 <!-- Loading... -->
@@ -84,17 +92,17 @@
             <p v-if="users.length < 1">
                 No users for this skill set found.
             </p>
-
-            <div v-if="!loading" class="card mb-3 shadow-lg" v-for="user in users"
-                style="border: 1px solid #ccc;border-radius: 5px;">
+            <div v-if="!loading" id="profile-card" class="card mb-3" v-for="user in users"
+                style="border-radius: 5px;">
                 <a style="cursor:pointer" data-bs-toggle="offcanvas" :data-bs-target="'#offcanvasUser' + user.id">
-                    <div class="card-body shadow-sm">
+                    <div class="card-body">
                         <div class="row">
                             <div class="col-sm-3">
                                 <div class="profile-picture">
                                     <img src="https://profile-image-uploader.s3.amazonaws.com/images/WBqGBdWBoTnSZhRLjuOSMsKBODQErTzXu8vxZaVD.png"
                                         alt="Profile picture" class="rounded-circle">
                                 </div>
+                                
                             </div>
                             <div class="col-sm-9">
                                 <h4 class="color: navy">{{ user.firstname }}&nbsp;{{ user.lastname }}</h4>
@@ -107,16 +115,16 @@
                                     <span v-for="(skill, index) in user.skills" :key="index"
                                         class="badge badge-pill badge-primary"
                                         style="background-color: rgb(241 245 249) ; color: #222; font-size: small; padding: 5px; margin-right: 5px;">
-                                        {{ skill.name }}
+                                        <img style="width: 25px;" :src="'/icons/pl/' + skill.name + '.png'" > {{ skill.name }}
                                     </span>
                                 </div>
 
                                 <div class="mt-3">
-                                    <i class='fas fa-map-marker-alt'
-                                        style='font-size:larger ;color:grey'></i>&nbsp;Kathmandu &nbsp;&nbsp;
-                                    <i class='far fa-calendar-alt' style='font-size:larger;color:grey'></i> Mon, Tue, Wed
+                                    <i class="bi bi-geo-alt-fill" style="color: #1d1dff"></i> Kathmandu &nbsp;
+                                    <i class="bi bi-calendar-week-fill" style="color: #1d1dff"></i> &nbsp;Mon, Tue, Wed
+                                    &nbsp;<i class="bi bi-clock-fill" style="color: #1d1dff"></i> 30 hours/week
                                 </div>
-                                <p class="mt-3">{{ user.workPreference }}</p>
+                                <!-- <p class="mt-3">{{ user.workPreference }}</p> -->
                             </div>
 
                             <!-- <div class="col-md-3">
@@ -130,7 +138,7 @@
                         </div>
                     </div>
                 </a>
-                <div class="card-footer">
+                <!-- <div class="card-footer">
                     <hr class="hr">
                     <div class="row justify-content-center">
                         <div class="col-auto">
@@ -157,47 +165,47 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
                 <!--slide over-->
                 <div class="offcanvas offcanvas-end" tabindex="-1" :id="'offcanvasUser' + user.id"
-                    aria-labelledby="offcanvasUserLabel" style="width: 50%; max-width: none;">
+                    aria-labelledby="offcanvasUserLabel" style="width: 60%; max-width: none;">
                     <div class="offcanvas-header">
-                        <h5 class="offcanvas-title" id="offcanvasUserLabel">{{ user.firstname }}&nbsp;{{ user.lastname }}
-                        </h5>
+                        <h3 class="offcanvas-title" id="offcanvasUserLabel">{{ user.firstname }}&nbsp;{{ user.lastname }}
+                        </h3>
                         <span class="float-right"><a :href="'/talent/' + user.slug">View in single page</a></span>
                         <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
                             aria-label="Close"></button>
                     </div>
                     <div class="offcanvas-body">
                         <!-- Panel content goes here -->
-                        <p>{{ user.about }}</p>
-                        <p>
-                        <h5 class="offcanvas-title">Experience</h5>
-                        {{ user.experience }} years
-                        </p>
-                        <p>
-                        <h5 class="offcanvas-title">My top skills</h5>
+                        <p class="lead">{{ user.about }}</p>
+                       
+                        <h4 class="offcanvas-title">Experience</h4>
+                        <p class="lead">{{ user.experience }} years</p>
+                        
+                      
+                        <h4 class="offcanvas-title">My top skills</h4>
                         <div class="tags">
-                            <span v-for="(skill, index) in user.skills" :key="index" class="btn btn-primary"
+                            <span v-for="(skill, index) in user.skills" :key="index" class="btn btn-dark"
                                 style="padding: 5px; margin-right: 5px;">
                                 {{ skill.name }}
                             </span>
                         </div>
-                        </p>
+                       
+                      
+                        <h4 class="offcanvas-title">Work preference</h4>
+                         <p class="lead">{{ user.workPreference }}</p>
+                        
+                       
+                        <h4 class="offcanvas-title">Avability</h4>
+                        <p class="lead">{{ user.availableDays }} ({{ user.availableHours }} hours a week)</p>
+                        
+                       
+                        <!-- <h4 class="offcanvas-title">Prefer worktype</h4>
+                        <p class="lead">{{ user.workType }} </p> -->
+                      
                         <p>
-                        <h5 class="offcanvas-title">Work preference</h5>
-                        {{ user.workPreference }}
-                        </p>
-                        <p>
-                        <h5 class="offcanvas-title">Avability</h5>
-                        {{ user.availableDays }} ({{ user.availableHours }} hours a week)
-                        </p>
-                        <p>
-                        <h5 class="offcanvas-title">Prefer worktype</h5>
-                        {{ user.workType }}
-                        </p>
-                        <p>
-                            <button class="btn btn-info text-white">Chat now</button>
+                            <button class="btn btn-dark text-white">Chat now</button>
                         </p>
                     </div>
                 </div>
@@ -212,6 +220,7 @@
             </div>
         </div>
     </div>
+</div>
     <button @click="resetFilters" class="btn btn-danger">Reset filter</button>
 </template>
 <script>
@@ -412,7 +421,7 @@ export default {
 
 </style> -->
 
-<style >
+<style scoped>
 body {
     font-family: 'Open Sans', sans-serif;
 }
@@ -421,8 +430,14 @@ body {
     display: none;
 }
 
-.card {
+#profile-card {
+    background-color: #f5f5f5;
     border: none;
+}
+.tags {
+}
+#profile-card:hover{
+    background-color: #e5e7eb!important;
 }
 
 .profile-picture {
@@ -432,10 +447,11 @@ body {
 }
 
 .profile-picture img {
-    width: 150px;
-    height: 150px;
-    object-fit: cover;
-    border: 3px solid #4a4a4a;
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border: 0px solid #1d1dff;
+  border-radius: 50%; /* Make the border circular */
 }
 
 h3 {
@@ -556,4 +572,23 @@ span.filter-header {
     margin-bottom: 10px;
     margin-top: 10px;
 }
+.hero-section {
+  background-color:#f5f5f5;
+  height: 200px;
+  position: relative;
+  padding: 50px;
+  margin-top: -24px;
+  margin-left: -12px;
+  margin-right: -12px;
+}
+.centered {
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 40px;
+  font-weight: bold;
+  color: #222;
+}
+
 </style>

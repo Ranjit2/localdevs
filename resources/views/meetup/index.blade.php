@@ -4,6 +4,8 @@
 <div class="container">
 <h2 class="mt-4">Developers meetup</h2>
 <a href="/create-devs-talks">Create</a>
+https://phpstoke.co.uk/
+https://allevents.in/ahmedabad/laravellive-ahmedabad-meetup-april-2023/80001150342391?ref=eventlist-cat
     <div class="row row-cols-1 row-cols-md-4 g-4">
         <div class="col-md-4">
             <div class="card text-white bg-dark">

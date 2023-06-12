@@ -2,7 +2,7 @@
     <div class="col-md-2"></div>
     <div class="row justify-content-center rounded bg-white">
 
-        <div class="col-md-10">
+        <div class="col-md-12">
             <div class="col-md-10">
                 <div class="row ">
                     <div class="col-md-6"></div>
@@ -32,7 +32,7 @@
                 </div>
             </div>
 
-            <div class="row">
+            <!-- <div class="row">
                 <div class="col-md-6 mt-3">
                     <div class="skeleton-email"></div>
                 </div>
@@ -40,7 +40,7 @@
                 <div class="col-md-6 mt-3">
                     <div class="skeleton-password"></div>
                 </div>
-            </div>
+            </div> -->
 
             <!-- <div class="row skeleton-loading"> -->
             <div class="row">
@@ -117,7 +117,7 @@
 
 .skeleton-social1 {
     /* width: 200px; */
-    height: 30px;
+    height: 40px;
     margin-top: 10px;
     background-color: #E0E0E0;
     animation: loading 1.5s ease-in-out infinite;
@@ -125,7 +125,7 @@
 
 .skeleton-social2 {
     /* width: 200px; */
-    height: 30px;
+    height: 40px;
     margin-top: 10px;
     background-color: #E0E0E0;
     animation: loading 1.5s ease-in-out infinite;
@@ -133,7 +133,7 @@
 
 .skeleton-social3 {
     /* width: 200px; */
-    height: 30px;
+    height: 40px;
     margin-top: 10px;
     background-color: #E0E0E0;
     animation: loading 1.5s ease-in-out infinite;
@@ -149,7 +149,7 @@
 
 .skeleton-fname {
     /* width: 200px; */
-    height: 30px;
+    height: 40px;
     margin-top: 10px;
     background-color: #E0E0E0;
     animation: loading 1.5s ease-in-out infinite;
@@ -157,7 +157,7 @@
 
 .skeleton-lname {
     /* width: 200px; */
-    height: 30px;
+    height: 40px;
     margin-top: 10px;
     background-color: #E0E0E0;
     animation: loading 1.5s ease-in-out infinite;
@@ -165,7 +165,7 @@
 
 .skeleton-email {
     /* width: 200px; */
-    height: 30px;
+    height: 40px;
     margin-top: 10px;
     background-color: #E0E0E0;
     animation: loading 1.5s ease-in-out infinite;
@@ -173,7 +173,7 @@
 
 .skeleton-password {
     /* width: 200px; */
-    height: 30px;
+    height: 40px;
     margin-top: 10px;
     background-color: #E0E0E0;
     animation: loading 1.5s ease-in-out infinite;

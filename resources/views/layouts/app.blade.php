@@ -17,14 +17,12 @@
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
-    <!-- <link rel="stylesheet" href="{{asset('css/fonts/font.css')}}"/> -->
-    <!-- Styles -->
-    {{-- <link href="{{ asset('css/app.css') }}" rel="stylesheet"> --}}
+    <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
 </head>
 
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white ">
+        <nav class="navbar navbar-expand-md navbar-light bg-white" style="height: 70px;">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
                     <!-- <span style="color:#1d1dff" class="fw-bold">{{ config('app.name', 'Laravel') }}</span> -->
@@ -37,7 +35,9 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav me-auto">
-
+                        <li class="nav-item menu-item">
+                            <a class="nav-link" href="#">X menu</a>
+                        </li>
                     </ul>
 
                     <!-- Right Side Of Navbar -->
@@ -45,6 +45,9 @@
                         <!-- Authentication Links -->
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('devs-talks') }}">{{ __('Devs Meetup') }}</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('devs-talks') }}">{{ __('Post job') }}</a>
                         </li>
                         @guest
                         @if (Route::has('login'))
@@ -78,12 +81,12 @@
                         @endif
                         @else
                         <li class="nav-item dropdown">
-                            <a id="navbarDropdown" style="font-size: 18px; color:#000;" class="fw-bold nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                            <a id="navbarDropdown" style="font-size: 18px;" class="fw-bold nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                 <span class="">{{ Auth::user()->firstname }} {{ Auth::user()->lastname }}</span>
                             </a>
 
                             <div class="shadow-lg dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="/dashboard">
+                                <a class="dropdown-item" href="/user/dashboard">
                                     <i class="bi bi-house-door-fill" style="color: #1d1dff;"></i> Dashboard
                                 </a>
                                 <a class="dropdown-item" href="#">
@@ -107,14 +110,34 @@
         </nav>
 
         <main class="py-4">
-            @yield('content')
+            @yield('content')   
         </main>
     </div>
 </body>
 <style>
+    .nav-link {
+        font-size: 18px; /* Increase the font size as desired */
+        margin-right: 10px; /* Add some gap between each link */
+        transition: background-color 0.3s; /* Add a smooth transition effect */
+    }
+
+    .nav-link:hover {
+        background-color: #1d1dff; /* Change the background color to red on hover */
+        color: #fff;
+        border-radius: 5px;
+    }
+</style>
+<style>
     body{
         font-family: 'Nunito';
         font-size: 16px;
+    }
+    .navbar {
+        /* background-color:  rgb(79, 68, 148)!important; */
+        
+    } .navbar a {
+        /* color:#fff!important; */
+
     }
     /* .navbar {
         background-color: navy!important;
@@ -136,6 +159,11 @@
     .dropdown-item:hover {
         background-color: #f8f9fa;
         /* adjust as needed */
+    }
+    .menu-item {
+        margin-left: 100px;
+        font-size: 18px;
+        font-weight: bold;
     }
 </style>
 

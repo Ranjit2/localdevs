@@ -1,360 +1,429 @@
 <template>
-    <ProfileEditLoading v-if="isLoading" />
     <!-- <RouterLink to="/dashboard" v-if="!isLoading" class="btn btn-light" style="background-color:#5624d0;color:#fff;">Back to
                     Dashboard</RouterLink> -->
-    <div class="row justify-content-center" v-if="!isLoading">
-        <div class="col-md-10">
-            <Header />
-            <h3>Profile</h3>
-            <div class="card mt-2">
-                <div class="card-body">
-                    <div class="card-title">
-                        <h4 class="text-center" style="color:#000082">Make your profile outstanding</h4>
-                    </div>
-                    <div class="d-flex flex-column align-items-center text-center">
-                        <p id="errorUploadingImage"></p>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <Header />
+                <ProfileEditLoading v-if="isLoading" />
 
-                        <p v-if="status">Uploading...<br>
-                        <div class="progress">
-                            <div class="progress-bar" role="progressbar" :style="{ width: `${progress}%` }"
-                                :aria-valuenow="progress" aria-valuemin="0" aria-valuemax="100">
-                                {{ progress }}%
+                <h3 v-if="!isLoading" class="mt-3">Profile</h3>
+                <div v-if="successMessage">
+                    <p class="mt-2" style="font-size: 18px; color:#1d1dff;">
+                        <i class="fa fa-spinner fa-spin"></i> <i class="bi bi-check2-circle"></i> Profile successfully
+                        updated
+                    </p>
+                </div>
+                <div class="card mt-2" v-if="!isLoading">
+                    <div class="card-body">
+                        <div class="card-title">
+                            <h4 class="text-center" style="color:#000082">Make your profile outstanding</h4>
+                        </div>
+                        <div class="d-flex flex-column align-items-center text-center">
+                            <p id="errorUploadingImage"></p>
+
+                            <p v-if="status">Uploading...<br>
+                            <div class="progress">
+                                <div class="progress-bar" role="progressbar" :style="{ width: `${progress}%` }"
+                                    :aria-valuenow="progress" aria-valuemin="0" aria-valuemax="100">
+                                    {{ progress }}%
+                                </div>
                             </div>
+                            </p>
+
+                            <div class="image-container profile-picture">
+                                <img v-if="profileImage" class="rounded-circle" :src="profileImage"
+                                    style="border:1px solid #ccc;border-radius: 50%;">
+                                <img v-else src="https://via.placeholder.com/150" alt="User Profile Image"
+                                    class="img-fluid rounded-circle">
+                                <label for="image-upload" class="image-upload-label">
+                                    <i class="fa fa-camera"></i>
+                                    Upload Image Restricted
+                                </label>
+                                <input type="file" ref="myImage" id="image-upload" class="image-upload-input"
+                                    @change="updateProfilePicture()">
+                            </div>
+
+                            <span class="" style="font-size: 18px;">{{ formData.firstname }}&nbsp;{{ formData.lastname
+                            }}</span>
+                            <span class="fw-bold">{{ expertise }}</span>
+                            <span>{{ address }}</span>
                         </div>
-                        </p>
+                        <form @submit.prevent="formOnSubmit" method="POST">
+                            <div class="p-3 py-1">
 
-                        <div class="image-container profile-picture">
-                            <img v-if="profileImage" class="rounded-circle" :src="profileImage"
-                                style="border:1px solid #ccc;border-radius: 50%;">
-                            <img v-else src="https://via.placeholder.com/150" alt="User Profile Image"
-                                class="img-fluid rounded-circle">
-                            <label for="image-upload" class="image-upload-label">
-                                <i class="fa fa-camera"></i>
-                                Upload Image Restricted
-                            </label>
-                            <!-- <input type="file" ref="myImage" id="image-upload" class="image-upload-input"
-                                @change="updateProfilePicture()"> -->
-                        </div>
+                                <div class="row mt-2">
+                                    <!-- {{ formData }} -->
+                                    <hr>
+                                    <!-- {{ formData.userBasedSkillList }} -->
+                                    <div class="col-md-6 fw-bold" id="firstname">First name
 
-                        <span class="" style="font-size: 18px;">{{ formData.firstname }}&nbsp;{{ formData.lastname }}</span>
-                        <span class="fw-bold">{{ expertise }}</span>
-                        <span>{{ address }}</span>
-                    </div>
-                    <form @submit.prevent="formOnSubmit" method="POST">
-                        <div class="p-3 py-1">
+                                        <input type="text" class="form-control" id="fname" placeholder="first name"
+                                            v-model="formData.firstname" disabled>
+                                    </div>
+                                    <span v-for="error in v$.firstname.$errors" :key="error.$uid" class="error-red">
+                                        {{ error.$message }}
+                                    </span>
 
-                            <div class="row mt-2">
-                                <!-- {{ formData }} -->
+                                    <div class="col-md-6 fw-bold">Last name
+                                        <input type="text" v-model="formData.lastname" id="lname" class="form-control"
+                                            placeholder="Doe" disabled>
+                                    </div>
+
+                                    <span v-for="error in v$.lastname.$errors" :key="error.$uid" class="error-red">
+                                        {{ error.$message }}
+                                    </span>
+                                    <a href="#" @click.prevent="enableEditing">enable editing</a>
+                                </div>
+
+                                <div class="row mt-3">
+                                    <div class="col-md-12 fw-bold">About me
+                                        <textarea class="form-control" v-model="formData.about" cols="" rows=""></textarea>
+                                    </div>
+                                    <span v-for="error in v$.about.$errors" :key="error.$uid" class="error-red">
+                                        {{ error.$message }}
+                                    </span>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mt-3 fw-bold">Year of experience
+                                        <select class="form-control" v-model="formData.experience">
+                                            <option name="" value="1">1 year</option>
+                                            <option name="" value="2">2 years</option>
+                                            <option name="" value="3">3 years</option>
+                                            <option name="" value="4">4 years</option>
+                                            <option name="" value="5">5 years</option>
+                                            <option name="" value="6">6 years</option>
+                                            <option name="" value="7">7 years</option>
+                                            <option name="" value="8">8 years</option>
+                                            <option name="" value="9">9 years</option>
+                                            <option name="" value="10">10 years</option>
+                                            <option name="" value="11">11 years</option>
+                                            <option name="" value="12">12 years</option>
+                                            <option name="" value="13">13 years</option>
+                                            <option name="" value="14">14 years</option>
+                                            <option name="" value="15">15 years</option>
+                                        </select>
+                                    </div>
+                                    <span v-for="error in v$.about.$errors" :key="error.$uid" class="error-red">
+                                        {{ error.$message }}
+                                    </span>
+                                    <div class="col-md-6 mt-3 fw-bold">Role level
+                                        <select class="form-control" v-model="formData.roleLevel">
+                                            <option name="" value="Junior">Junior level</option>
+                                            <option name="" value="Mid-level">Mid-level</option>
+                                            <option name="" value="Senior">Senior level</option>
+                                            <option name="" value="c-level">c-level</option>
+                                        </select>
+                                    </div>
+                                    <span v-for="error in v$.about.$errors" :key="error.$uid" class="error-red">
+                                        {{ error.$message }}
+                                    </span>
+                                </div>
+
+                                <div class="col-md-12 mt-3 fw-bold">
+                                    <label for="district">Where do you live?</label>
+                                    <input type="text" class="form-control" v-model="formData.search"
+                                        @input="filterDistricts" @click="showOptionPlaces = true">
+                                    <div class="card mt-1 shadow-sm" v-show="showOptionPlaces">
+                                        <div class="card-body" style="max-height:200px;overflow-y:scroll">
+                                            <ul class="list-group">
+                                                <li v-for="district in filteredDistricts" :key="district.id"
+                                                    class="list-group-item">
+                                                    <label class="form-check-label" :for="district.id"
+                                                        @click="selectDistrict(district)">
+                                                        {{ district }}
+                                                    </label>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                    <span class="error-red">
+
+                                    </span>
+
+                                </div>
+
                                 <hr>
-                                <!-- {{ formData.userBasedSkillList }} -->
-                                <div class="col-md-6 fw-bold" id="firstname">First name
 
-                                    <input type="text" class="form-control" id="fname" placeholder="first name"
-                                        v-model="formData.firstname" disabled>
-                                </div>
-                                <span v-for="error in v$.firstname.$errors" :key="error.$uid" class="error-red">
-                                    {{ error.$message }}
-                                </span>
-
-                                <div class="col-md-6 fw-bold">Last name
-                                    <input type="text" v-model="formData.lastname" id="lname" class="form-control"
-                                        placeholder="Doe" disabled>
-                                </div>
-
-                                <span v-for="error in v$.lastname.$errors" :key="error.$uid" class="error-red">
-                                    {{ error.$message }}
-                                </span>
-                                <a href="#" @click.prevent="enableEditing">enable editing</a>
-                            </div>
-
-                            <div class="row mt-3">
-                                <div class="col-md-12 fw-bold">About me
-                                    <textarea class="form-control" v-model="formData.about" cols="" rows=""></textarea>
-                                </div>
-                                <span v-for="error in v$.about.$errors" :key="error.$uid" class="error-red">
-                                    {{ error.$message }}
-                                </span>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-6 mt-3 fw-bold">Year of experience
-                                    <select class="form-control" v-model="formData.experience">
-                                        <option name="" value="1">1 year</option>
-                                        <option name="" value="2">2 years</option>
-                                        <option name="" value="3">3 years</option>
-                                        <option name="" value="4">4 years</option>
-                                        <option name="" value="5">5 years</option>
-                                        <option name="" value="6">6 years</option>
-                                        <option name="" value="7">7 years</option>
-                                        <option name="" value="8">8 years</option>
-                                        <option name="" value="9">9 years</option>
-                                        <option name="" value="10">10 years</option>
-                                        <option name="" value="11">11 years</option>
-                                        <option name="" value="12">12 years</option>
-                                        <option name="" value="13">13 years</option>
-                                        <option name="" value="14">14 years</option>
-                                        <option name="" value="15">15 years</option>
-                                    </select>
-                                </div>
-                                <span v-for="error in v$.about.$errors" :key="error.$uid" class="error-red">
-                                    {{ error.$message }}
-                                </span>
-                                <div class="col-md-6 mt-3 fw-bold">Role level
-                                    <select class="form-control" v-model="formData.roleLevel">
-                                        <option name="" value="Junior">Junior level</option>
-                                        <option name="" value="Mid-level">Mid-level</option>
-                                        <option name="" value="Senior">Senior level</option>
-                                        <option name="" value="c-level">c-level</option>
-                                    </select>
-                                </div>
-                                <span v-for="error in v$.about.$errors" :key="error.$uid" class="error-red">
-                                    {{ error.$message }}
-                                </span>
-                            </div>
-
-                            <div class="col-md-12 mt-3 fw-bold">
-                                <label for="district">Where do you live?</label>
-                                <input type="text" class="form-control" v-model="formData.search" @input="filterDistricts"
-                                    @click="showOptionPlaces = true">
-                                <div class="card mt-1 shadow-sm" v-show="showOptionPlaces">
-                                    <div class="card-body" style="max-height:200px;overflow-y:scroll">
-                                        <ul class="list-group">
-                                            <li v-for="district in filteredDistricts" :key="district.id"
-                                                class="list-group-item">
-                                                <label class="form-check-label" :for="district.id"
-                                                    @click="selectDistrict(district)">
-                                                    {{ district }}
-                                                </label>
-                                            </li>
-                                        </ul>
+                                <div class="mb-3 mt-2">
+                                    <label for="days" class="form-label"><b>Days Available</b></label><br>
+                                    <div class="form-check form-check-inline" v-for="(day, index) in days">
+                                        <input class="form-check-input" type="checkbox" v-model="formData.availableDays"
+                                            :value="day.name" :id="index"
+                                            :checked="formData.availableDays.includes(day.name)">
+                                        <label class="form-check-label" :for="index">{{ day.name }}</label>
+                                        <span v-for="error in v$.availableDays.$errors" :key="error.$uid" class="error-red">
+                                            {{ error.$message }}
+                                        </span>
                                     </div>
                                 </div>
 
-                                <span class="error-red">
+                                <div class="mb-3">
+                                    <!-- {{ formData.workType }} -->
+                                    <label for="days" class="form-label"><b>Work Types</b></label><br>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" id="freelancer" type="checkbox"
+                                            checked="formData.workType.includes('freelancer')" value="freelancer"
+                                            v-model="formData.workType">
+                                        <label class="form-check-label" for="freelancer">Long term </label>
+                                    </div>
 
-                                </span>
-
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-4 mt-3 fw-bold">Your website
-                                    <input type="text" class="form-control">
-                                </div>
-                                <span v-for="error in v$.about.$errors" :key="error.$uid" class="error-red">
-                                    {{ error.$message }}
-                                </span>
-                                <div class="col-md-4 mt-3 fw-bold">LinkedIn
-                                    <input type="text" class="form-control">
-                                </div>
-                                <span v-for="error in v$.about.$errors" :key="error.$uid" class="error-red">
-                                    {{ error.$message }}
-                                </span>
-                                <div class="col-md-4 mt-3 fw-bold">Github
-                                    <input id="input-github" name="github" v-model="formData.github"
-                                        @keyup="formData.github" type="text" placeholder="https://github.com/"
-                                        class="form-control">
-
-                                    <p style="color:red" v-if="githubFiledErrorMessage && formData.github.length > 3">{{
-                                        githubFiledErrorMessage }}</p>
-                                    <span v-for="error in v$.github.$errors" :key="error.$uid" class="error-red">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" id="employee" type="checkbox"
+                                            checked="formData.workType.includes('freelancer')" value="employee"
+                                            v-model="formData.workType">
+                                        <label class="form-check-label" for="employee">Short term</label>
+                                    </div>
+                                    <span v-for="error in v$.workType.$errors" :key="error.$uid" class="error-red">
                                         {{ error.$message }}
                                     </span>
                                 </div>
-                                <span v-for="error in v$.about.$errors" :key="error.$uid" class="error-red">
-                                    {{ error.$message }}
-                                </span>
-                            </div>
+                                <h5>Skills</h5>
 
-                            <hr>
+                                <div class="mb-3" v-if="userBasedSkillList.programming">
+                                    <label for="days" class="form-label"
+                                        v-if="userBasedSkillList.programming"><b>Programming
+                                            Languages</b></label><br>
+                                    <div class="form-check form-check-inline"
+                                        v-for="(programming, index) in userBasedSkillList.programming">
 
-                            <div class="mb-3 mt-2">
-                                <label for="days" class="form-label"><b>Days Available</b></label><br>
-                                <div class="form-check form-check-inline" v-for="(day, index) in days">
-                                    <input class="form-check-input" type="checkbox" v-model="formData.availableDays"
-                                        :value="day.name" :id="index" :checked="formData.availableDays.includes(day.name)">
-                                    <label class="form-check-label" :for="index">{{ day.name }}</label>
-                                    <span v-for="error in v$.availableDays.$errors" :key="error.$uid" class="error-red">
-                                        {{ error.$message }}
-                                    </span>
-                                </div>
-                            </div>
-
-                            <div class="mb-3">
-                                <!-- {{ formData.workType }} -->
-                                <label for="days" class="form-label"><b>Work Types</b></label><br>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" id="freelancer" type="checkbox"
-                                        checked="formData.workType.includes('freelancer')" value="freelancer"
-                                        v-model="formData.workType">
-                                    <label class="form-check-label" for="freelancer">Long term </label>
+                                        <input type="checkbox" class="form-check-input"
+                                            v-model="formData.userSelectedSkills"
+                                            :checked="formData.userSelectedSkills.includes(index)" :value="index"
+                                            :id="programming" />
+                                        <!-- index is ID here, not index that starts from 0 -->
+                                        <label class="form-check-label" :for="programming"> {{ programming }}</label>
+                                        <span v-for="error in v$.availableDays.$errors" :key="error.$uid" class="error-red">
+                                            {{ error.$message }}
+                                        </span>
+                                    </div>
                                 </div>
 
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" id="employee" type="checkbox"
-                                        checked="formData.workType.includes('freelancer')" value="employee"
-                                        v-model="formData.workType">
-                                    <label class="form-check-label" for="employee">Short term</label>
-                                </div>
-                                <span v-for="error in v$.workType.$errors" :key="error.$uid" class="error-red">
-                                    {{ error.$message }}
-                                </span>
-                            </div>
-                            <h5>Skills</h5>
+                                <div class="mb-3" v-if="userBasedSkillList.framework">
+                                    <label for="days" class="form-label" v-if="userBasedSkillList.framework"><b>Web
+                                            Frameworks,
+                                            CMS
+                                            &
+                                            Mobile Development</b>
+                                    </label>
+                                    <div class="col-md-3"><input type="text" class="form-control" v-model="filter"
+                                            placeholder="Search skill"></div>
+                                    <br>
+                                    <div class="form-check form-check-inline"
+                                        v-for="(framework, index) in filteredFrameworks">
+                                        <input type="checkbox" class="form-check-input"
+                                            v-model="formData.userSelectedSkills"
+                                            :checked="formData.userSelectedSkills.includes(framework)" :value="index"
+                                            :id="framework" />
+                                        <label class="form-check-label" :for="framework">{{ framework }}</label>
+                                    </div>
+                                    <br>
+                                    <a v-if="!showAll" style="color:#1d1dff;;" href="#" @click.prevent="showAll = true">Show
+                                        All</a>
+                                    <br>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Add new Skill</a>
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static"
+                                        data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+                                        aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Skill</h1>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                                </div>
+                                                <form>
+                                                    <div class="modal-body" v-if="additionalSkillData.length<5">
+                                                        <label for="skill">Name of your skill</label>
+                                                        <input type="text" class="form-control" id="skill"
+                                                            v-model="additionalSkill">
+                                                        <span v-for="error in v1$.additionalSkill.$errors" :key="error.$uid" class="error-red">
+                                                            {{ error.$message }}
+                                                        </span>
 
-                            <div class="mb-3" v-if="userBasedSkillList.programming">
-                                <label for="days" class="form-label" v-if="userBasedSkillList.programming"><b>Programming
-                                        Languages</b></label><br>
-                                <div class="form-check form-check-inline"
-                                    v-for="(programming, index) in userBasedSkillList.programming">
+                                                    </div>
+                                                    <div v-if="additionalSkillData.length==5" class="error-red text-center">You can only add upto 5 skills.</div>
+                                                    <p v-if="additionalSkillMessage" style="color:green;font-weight:bold;margin-left:5px;">
+                                                        Skill added successfully
+                                                   </p>
 
-                                    <input type="checkbox" class="form-check-input" v-model="formData.userSelectedSkills"
-                                        :checked="formData.userSelectedSkills.includes(index)" :value="index"
-                                        :id="programming" />
-                                    <!-- index is ID here, not index that starts from 0 -->
-                                    <label class="form-check-label" :for="programming"> {{ programming }}</label>
-                                    <span v-for="error in v$.availableDays.$errors" :key="error.$uid" class="error-red">
-                                        {{ error.$message }}
-                                    </span>
-                                </div>
-                            </div>
+                                                    <div class="modal-footer">
 
-                            <div class="mb-3" v-if="userBasedSkillList.framework">
-                                <label for="days" class="form-label" v-if="userBasedSkillList.framework"><b>Web Frameworks,
-                                        CMS
-                                        &
-                                        Mobile Development</b>
-                                </label>
-                                <div class="col-md-3"><input type="text" class="form-control" v-model="filter" placeholder="Search skill"></div>
-                                <br>
-                                <div class="form-check form-check-inline"
-                                    v-for="(framework, index) in filteredFrameworks">
-                                    <input type="checkbox" class="form-check-input" v-model="formData.userSelectedSkills"
-                                        :checked="formData.userSelectedSkills.includes(framework)" :value="index"
-                                        :id="framework" />
-                                    <label class="form-check-label" :for="framework">{{ framework }}</label>
-                                    <span v-for="error in v$.availableDays.$errors" :key="error.$uid" class="error-red">
-                                        {{ error.$message }}
-                                    </span>
-                                </div>
-                            </div>
+                                                        <button type="button" class="btn btn-default"
+                                                            data-bs-dismiss="modal">Close</button>
+                                                        <button type="button" class="btn btn-light"
+                                                            :disabled="additionalSkillData.length>=5 || isProcessingAdditionalSkill"
+                                                            @click.prevent="saveAdditionalSkill"> {{isProcessingAdditionalSkill?'Saving': 'Save'}}
+                                                            <span v-if="isProcessingAdditionalSkill" class="spinner-border spinner-border-sm"></span>
+                                                        </button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="inline">
+                                        <span v-for="additionalSkill in additionalSkillData">
+                                            <div class="d-inline-flex align-items-center">
+                                                <button class="btn btn-outline-primary" style="margin-left: 5px;">{{
+                                                    additionalSkill.name }}
+                                                    <i class="bi bi-trash-fill ml-2" data-bs-toggle="modal"
+                                                        data-bs-target="#staticBackdropRemove"
+                                                        @click="removeAdditionalSkill(additionalSkill.id)"></i>
+                                                </button>
+                                            </div>
 
-                            <div class="mb-3" v-if="userBasedSkillList.database">
-                                <label for="days" class="form-label"><b>Databases</b>
-                                </label><br>
-                                <div class="form-check form-check-inline"
-                                    v-for="(database, index) in userBasedSkillList.database">
-                                    <input type="checkbox" class="form-check-input" v-model="formData.userSelectedSkills"
-                                        :checked="formData.userSelectedSkills.includes(database)" :value="index"
-                                        :id="database" />
-                                    <label class="form-check-label" :for="database">{{ database }}</label>
-                                    <span v-for="error in v$.availableDays.$errors" :key="error.$uid" class="error-red">
-                                        {{ error.$message }}
-                                    </span>
-                                </div>
-                            </div>
 
-                            <div class="mb-3" v-if="userBasedSkillList.motion">
-                                <label for="days" class="form-label"><b>Motion</b>
-                                </label><br>
-                                <div class="form-check form-check-inline"
-                                    v-for="(motion, index) in userBasedSkillList.motion">
-                                    <input type="checkbox" class="form-check-input" v-model="formData.userSelectedSkills"
-                                        :checked="formData.userSelectedSkills.includes(motion)" :value="index"
-                                        :id="motion" />
-                                    <label class="form-check-label" :for="motion">{{ motion }}</label>
-                                    <span v-for="error in v$.availableDays.$errors" :key="error.$uid" class="error-red">
-                                        {{ error.$message }}
-                                    </span>
-                                </div>
-                            </div>
-
-                            <div class="mb-3" v-if="userBasedSkillList.cloudcomputing">
-                                <label for="days" class="form-label"><b>Cloud computing</b>
-                                </label><br>
-                                <div class="form-check form-check-inline"
-                                    v-for="(cloudcomputing, index) in userBasedSkillList.cloudcomputing">
-                                    <input type="checkbox" class="form-check-input" v-model="formData.userSelectedSkills"
-                                        :checked="formData.userSelectedSkills.includes(cloudcomputing)" :value="index"
-                                        :id="cloudcomputing" />
-                                    <label class="form-check-label" :for="cloudcomputing">{{ cloudcomputing }}</label>
-                                    <span v-for="error in v$.availableDays.$errors" :key="error.$uid" class="error-red">
-                                        {{ error.$message }}
-                                    </span>
-                                </div>
-                            </div>
-
-                            <div class="mb-3">
-                                <!-- {{ formData.workPreference }} -->
-                                <label class="form-label"><b>Location preferences</b></label><br>
-
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" id="wfh" type="checkbox"
-                                        checked="formData.workPreference.includes('wfh')" value="wfh"
-                                        v-model="formData.workPreference">
-                                    <label class="form-check-label" for="wfh">Work from home </label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" id="onsite" type="checkbox"
-                                        checked="formData.workPreference.includes('onsite')" value="onsite"
-                                        v-model="formData.workPreference">
-                                    <label class="form-check-label" for="onsite">Onsite</label>
-                                </div>
-                            </div>
-                            <span v-for="error in v$.workPreference.$errors" :key="error.$uid" class="error-red">
-                                {{ error.$message }}
-                            </span>
-
-                            <div class="mb-3" v-if="formData.workPreference.includes('onsite')">
-                                <p>Since you choose <b>onsite</b>, Please choose the places where you can work onsite</p>
-
-                                <div class="card" style="background-color:;overflow-y: scroll;max-height: 150px;">
-                                    <div class="card-body shadow-sm">
-                                        <div class="row">
-                                            <label class="form-label">
-                                            </label>
-                                            <div class="form-check form-check-inline" v-for="(place, index) in places"
-                                                :key="index">
-                                                <input class="form-check-input" :id="place.name" type="checkbox"
-                                                    :checked="formData.userSelectedPlaces.includes(place.id)"
-                                                    v-model="formData.userSelectedPlaces" :value="place.id">
-                                                <label class="form-check-label" :for="place.name">{{ place.name }}</label>
+                                        </span>
+                                        <div class="modal fade" id="#staticBackdropRemove" data-bs-backdrop="static"
+                                            data-bs-keyboard="false" tabindex="-1"
+                                            aria-labelledby="staticBackdropLabelRemove" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h1 class="modal-title fs-5" id="staticBackdropLabelRemove">Delete
+                                                            confirmation</h1>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                            aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        Are you sure you want to remove this skill?
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                            data-bs-dismiss="modal">Cancel</button>
+                                                        <!-- <button type="button" class="btn btn-primary" @click="removeAdditionalSkill(additionalSkill.id)">Delete</button> -->
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+
+                                <div class="mb-3" v-if="userBasedSkillList.database">
+                                    <label for="days" class="form-label"><b>Databases</b>
+                                    </label><br>
+                                    <div class="form-check form-check-inline"
+                                        v-for="(database, index) in userBasedSkillList.database">
+                                        <input type="checkbox" class="form-check-input"
+                                            v-model="formData.userSelectedSkills"
+                                            :checked="formData.userSelectedSkills.includes(database)" :value="index"
+                                            :id="database" />
+                                        <label class="form-check-label" :for="database">{{ database }}</label>
+                                        <span v-for="error in v$.availableDays.$errors" :key="error.$uid" class="error-red">
+                                            {{ error.$message }}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3" v-if="userBasedSkillList.motion">
+                                    <label for="days" class="form-label"><b>Motion</b>
+                                    </label><br>
+                                    <div class="form-check form-check-inline"
+                                        v-for="(motion, index) in userBasedSkillList.motion">
+                                        <input type="checkbox" class="form-check-input"
+                                            v-model="formData.userSelectedSkills"
+                                            :checked="formData.userSelectedSkills.includes(motion)" :value="index"
+                                            :id="motion" />
+                                        <label class="form-check-label" :for="motion">{{ motion }}</label>
+                                        <span v-for="error in v$.availableDays.$errors" :key="error.$uid" class="error-red">
+                                            {{ error.$message }}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3" v-if="userBasedSkillList.cloudcomputing">
+                                    <label for="days" class="form-label"><b>Cloud computing</b>
+                                    </label><br>
+                                    <div class="form-check form-check-inline"
+                                        v-for="(cloudcomputing, index) in userBasedSkillList.cloudcomputing">
+                                        <input type="checkbox" class="form-check-input"
+                                            v-model="formData.userSelectedSkills"
+                                            :checked="formData.userSelectedSkills.includes(cloudcomputing)" :value="index"
+                                            :id="cloudcomputing" />
+                                        <label class="form-check-label" :for="cloudcomputing">{{ cloudcomputing }}</label>
+                                        <span v-for="error in v$.availableDays.$errors" :key="error.$uid" class="error-red">
+                                            {{ error.$message }}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <!-- {{ formData.workPreference }} -->
+                                    <label class="form-label"><b>Location preferences</b></label><br>
+
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" id="wfh" type="checkbox"
+                                            checked="formData.workPreference.includes('wfh')" value="wfh"
+                                            v-model="formData.workPreference">
+                                        <label class="form-check-label" for="wfh">Work from home </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" id="onsite" type="checkbox"
+                                            checked="formData.workPreference.includes('onsite')" value="onsite"
+                                            v-model="formData.workPreference">
+                                        <label class="form-check-label" for="onsite">Onsite</label>
+                                    </div>
+                                </div>
+                                <span v-for="error in v$.workPreference.$errors" :key="error.$uid" class="error-red">
+                                    {{ error.$message }}
+                                </span>
+
+                                <div class="mb-3" v-if="formData.workPreference.includes('onsite')">
+                                    <p>Since you choose <b>onsite</b>, Please choose the places where you can work onsite
+                                    </p>
+
+                                    <div class="card" style="background-color:;overflow-y: scroll;max-height: 150px;">
+                                        <div class="card-body shadow-sm">
+                                            <div class="row">
+                                                <label class="form-label">
+                                                </label>
+                                                <div class="form-check form-check-inline" v-for="(place, index) in places"
+                                                    :key="index">
+                                                    <input class="form-check-input" :id="place.name" type="checkbox"
+                                                        :checked="formData.userSelectedPlaces.includes(place.id)"
+                                                        v-model="formData.userSelectedPlaces" :value="place.id">
+                                                    <label class="form-check-label" :for="place.name">{{ place.name
+                                                    }}</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="text-center mt-3">
+                                <button :disabled="isProcessing" class="btn btn-light btn-lg px-5 mt-2">
+                                    {{ isProcessing ? "Saving" : "Save" }}
+                                    <span v-if="isProcessing" class="spinner-border spinner-border-sm"></span>
+                                </button>
+
                             </div>
 
-                        </div>
-                        <div class="text-center mt-3">
-                            <button class="btn btn-light" type="submit" :class="{ 'loading': isSuccess }"
-                                :disabled="isSuccess">
-                                <span v-if="!isSuccess">Save Profile</span>
-                                <span v-else> Saving...<i class="fas fa-spinner fa-spin"></i></span>
-                            </button>
-                        </div>
-
-                    </form>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </template>
-<!-- https://tldv.io/ -->
 <script setup>
 import { ref, onMounted, computed } from 'vue';
 import { useVuelidate } from '@vuelidate/core'
-import { required, minLength, helpers } from "@vuelidate/validators"
+import { required, minLength, helpers, maxLength } from "@vuelidate/validators"
 import axios from 'axios'
 import Header from './Header.vue'
 import ProfileEditLoading from './components/ProfileEditLoading.vue';
-import { useUserStore } from '@/stores/user'
 
 
 const files = ref([]);
 const myImage = ref(null)
 const profileImage = ref('')
 const status = ref(false)
-const githubFiledErrorMessage = ref('')
+const isProcessing = ref(false)
+const successMessage = ref(false)
 const userBasedSkillList = ref([])//[{}]
 const progress = ref('')
 const expertise = ref('')
@@ -363,6 +432,8 @@ const places = ref([])
 const isLoading = ref(false);
 const showOptionPlaces = ref(false)
 const filter = ref('');
+const limit = ref(25);
+const showAll = ref(false);
 const districts = ref([
     "Achham",
     "Arghakhanchi",
@@ -442,7 +513,10 @@ const districts = ref([
     "Udayapur",
     "Western Rukum"
 ]);
-
+const additionalSkill = ref('')
+const additionalSkillData = ref([]);
+const additionalSkillMessage = ref(false)
+const isProcessingAdditionalSkill = ref(false)
 
 const filterDistricts = () => {
     showOptionPlaces.value = true
@@ -504,7 +578,6 @@ const formData = ref({
     firstname: '',
     lastname: '',
     about: '',
-    github: '',
     experience: '',
     roleLevel: '',
     availableDays: [],
@@ -519,26 +592,8 @@ const formData = ref({
 const onlyString = () => {
 
 }
-const checkGithub = () => {
-    if (formData.value.github != '') {
-        if (formData.value.github.includes('github.com')) {
-            githubFiledErrorMessage.value = ''
-            return true;
-        } else {
-            githubFiledErrorMessage.value = 'Please provide your Github profile link.'
-            return false;
-        }
-
-    }
-    githubFiledErrorMessage.value = '';
-
-    return true;
-}
 
 const rules = {
-    github: {
-        checkGithub
-    },
     firstname: {
         required
         //required:helpers.regex(/^([^0-9]*)$/)
@@ -565,24 +620,33 @@ const rules = {
     workPreference: {
         required: helpers.withMessage('Please select your work preferences', required),
         // minLength: minLength(1)
+    },
+}
+
+const rules1 = {
+    additionalSkill: {
+        required: helpers.withMessage('Please type the name of skill', required),
     }
 }
 const v$ = useVuelidate(rules, formData);
+const v1$ = useVuelidate(rules1, {additionalSkill});
 
 const formOnSubmit = async () => {
-
+    isProcessing.value = true;
     const result = await v$.value.$validate();
     if (result) {
-        // alert('success')
         axios.post('/user/profile', { formData: formData.value }).then((response) => {
             console.log(response.data)
+            isProcessing.value = false
+            successMessage.value = true
         }).catch((error) => {
             console.log(error)
         })
     } else {
+        isProcessing.value = false
         const el = document.getElementById('firstname')
         el.scrollIntoView({ behavior: 'smooth' });
-        alert('error')
+        alert('error.please refresh the page and try again')
     }
 }
 
@@ -608,6 +672,8 @@ onMounted(() => {
         //this makes sure our both arrays has some value to comapre
 
     }, 500);
+
+    getUserAdditionalSkill()
 
 })
 
@@ -662,12 +728,54 @@ const updateProfilePicture = (e) => {
 }
 
 const filteredFrameworks = computed(() => {
-    const filtered = Object.entries(userBasedSkillList.value.framework)
+    let filtered = Object.entries(userBasedSkillList.value.framework)
         .filter(([key, value]) =>
-          value.toLowerCase().includes(filter.value.toLowerCase())
+            value.toLowerCase().includes(filter.value.toLowerCase())
         );
-      return Object.fromEntries(filtered);
-    });
+
+    if (!showAll.value) {
+        filtered = filtered.slice(0, limit.value);
+    }
+
+    return Object.fromEntries(filtered);
+});
+
+const showAllButtonVisible = computed(() => {
+    return Object.keys(filteredFrameworks.value).length > 10;
+});
+
+const saveAdditionalSkill = async() => {
+    isProcessingAdditionalSkill.value = true;
+    const result1 = await v1$.value.$validate();
+    
+    if (result1) {
+        axios.post('/user/additional/skills', { additionalSkill: additionalSkill.value }).then((response) => {
+        additionalSkillMessage.value = true
+        getUserAdditionalSkill()
+        additionalSkill.value = ''
+        isProcessingAdditionalSkill.value = false
+    })
+    } else {
+        isProcessingAdditionalSkill.value = false;
+    }
+}
+
+//get additional skills
+const getUserAdditionalSkill = () => {
+    axios.get('/user/additional/skills').then((response) => {
+        additionalSkillData.value = response.data.data
+    })
+}
+
+//remove additional skills
+const removeAdditionalSkill = (id) => {
+    if (window.confirm("Are you sure you want to delete?")) {
+        axios.post('/delete/user/additional/skills', { id: id }).then((response) => {
+            getUserAdditionalSkill()
+        })
+    }
+}
+
 </script>
 
 <style scoped>
@@ -721,6 +829,11 @@ const filteredFrameworks = computed(() => {
 .form-check-input:checked {
     background-color: #1d1dff;
     border-color: #1d1dff;
+}
+
+.form-check-label:hover {
+    background-color: #f5f5f5;
+    cursor: pointer;
 }
 
 .btn-light {
@@ -803,6 +916,5 @@ const filteredFrameworks = computed(() => {
     100% {
         transform: rotate(360deg);
     }
-}
-</style>
+}</style>
 <style scoped></style>

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AdditionalSkills;
+use App\Models\Employment;
 use App\Models\Place;
 use App\Models\User;
 use App\Repositories\User\SkillLists;
@@ -10,7 +12,6 @@ use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Intervention\Image\Facades\Image;
 
 class UserProfileController extends Controller
 {
@@ -30,6 +31,34 @@ class UserProfileController extends Controller
         return response()->json(['message' => 'Profile updated']);
     }
 
+    public function additionalSkills(Request $request)
+    {
+        $additionalSkills = AdditionalSkills::create([
+            'user_id' => auth()->user()->id,
+            'name' => $request->additionalSkill
+        ]);
+
+        return response()->json([
+            'message' => 'Skill added successfully',
+            'data' => $additionalSkills
+        ]);
+    }
+
+    public function getAdditionalSkills() 
+    {
+        return response()->json([
+            'message' => 'Additional skills',
+            'data' => AdditionalSkills::where('user_id', auth()->user()->id)
+            ->select('id','name')
+            ->get()
+        ]); 
+    }
+
+    public function deleteAdditionalSkills(Request $request)
+    {
+        AdditionalSkills::find($request->id)->delete();
+    }
+
     public function findSkillListsForloggedInUser()
     {
         return $this->skillLists->listSkills();
@@ -37,42 +66,7 @@ class UserProfileController extends Controller
 
     public function userDetails()
     {
-        $user = \App\Models\User::where('id', auth()->id())->first();
-
-        $filteredDaysNullValue = array_filter(explode(",", $user->availableDays), fn ($value) => $value !== '');
-        $filteredWorkTypeNullValue = array_filter(explode(",", $user->workType), fn ($value) => $value !== '');
-
-        $skillSetIds = [];
-        $skillSetNames = [];
-        $years = $user->skills()->pluck('year');
-
-        foreach ($user->skills as $skill) {
-            $skillSetIds[] = $skill['id'];
-            $skillSetNames[] = $skill['name'];
-        }
-
-        $details = [
-            'firstname' => $user->firstname,
-            'lastname' => $user->lastname,
-            'slug' => $user->slug,
-            'address' => $user->address,
-            'about' => $user->about,
-            'expertise' => $user->expertise,
-            'userAddress' => $user->address,
-            'experience' => $user->experience,
-            'education' => $user->education,
-            'roleLevel' => $user->roleLevel,
-            'availableDays' => array_values($filteredDaysNullValue),
-            'workType' => array_values($filteredWorkTypeNullValue),
-            'skills' => $skillSetIds,
-            'skillNames' => $skillSetNames,
-            'skillYears' => $years,
-            'profileImage' => $user->profileImage,
-            'workPreference' => explode(',', $user->workPreference), //pass as an array, we can use includes('wfh') in :checked in vuejs 
-            'userSelectedPlaces' => $user->places->map(fn ($place) => $place['id'])
-        ];
-
-        return $details;
+        return $this->userProfile->getUserDetails();
     }
 
     public function places()
@@ -87,32 +81,14 @@ class UserProfileController extends Controller
         return view('profile-edit');
     }
 
-    public function uploadToS3(Request $request): JsonResponse
+    public function uploadToS3(Request $request)
     {
         $request->validate([
             'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $filename = $image->hashName();
+        return $this->userProfile->updateProfileImage($request);
 
-            // Resize the image to a maximum width of 800 pixels
-            $img = Image::make($image->getRealPath())->resize(200, null, function ($constraint) {
-                $constraint->aspectRatio();
-            });
-
-            // Upload the resized image to S3
-            $path = 'images/' . $filename;
-            Storage::disk('s3')->put($path, $img->stream()->__toString());
-
-            // Update the user's profile image URL with the S3 object URL
-            User::where('id', auth()->id())->update([
-                'profileImage' =>  $awsPath = Storage::disk('s3')->url($path)
-            ]);
-
-            return response()->json(['url' => $awsPath], Response::HTTP_OK);
-        }
     }
 
     public function updateExperience(Request $request)
@@ -126,9 +102,50 @@ class UserProfileController extends Controller
 
     public function updateEducation(Request $request)
     {
-        $education = User::where('id', auth()->id())->update(['education' => $request->education]);
+        $this->userProfile->updateUserEducation($request->education);
 
         return response()->json('success', Response::HTTP_OK);
+    }
+
+    public function social(Request $request)
+    {
+        $this->userProfile->storeSocial($request->formData);
+
+        return response()->json(['message' => 'Social links updated successfully']);
+    }
+
+    public function getSocial() 
+    {
+        return $this->userProfile->getSocialUrls();
+    }
+
+    public function employment(Request $request)
+    {
+       // dd($request->formData);
+        return Employment::updateOrCreate(
+            ['id' => $request->formData['jobId'], 'user_id'=> auth()->user()->id],
+            [
+                'job_title' => $request->formData['jobTitle'],
+                'company_name' => $request->formData['companyName'],
+                'company_location' => $request->formData['companyLocation'],
+                'start_date' => $request->formData['startDate'],
+                'end_date' => $request->formData['endDate'],
+                'isWorking' => $request->formData['isWorking']?? 0,
+                'description' => $request->formData['description'],
+        ]
+    );
+    }
+
+    public function getEmploymentHistory()
+    {
+        return Employment::latest()->where('user_id', auth()->user()->id)
+            ->get()
+            ->makeHidden(['user_id']);
+    }
+
+    public function deleteEmploymentHistory(Request $request)
+    {
+        return Employment::where('id', $request->jobId)->delete();
     }
 
     public function dashboard()

@@ -83,10 +83,12 @@ class TalentFilterController extends Controller
             return $result->paginate(5);
     }
 
-    public function view(User $user, $slug)
+    public function view( string $slug)
     {
-        $user = $user->where('slug', $slug)->first();
+        $user = User::with('employments')->where('slug', $slug)->first();
+        //it gets user employments detail if you do id,5, check relationship
         $user = $user->load('skills');
+        
         $days = explode(",", $user->availableDays);
 
         return view('user-profile', compact('user','days'));

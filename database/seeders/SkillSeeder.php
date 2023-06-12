@@ -16,32 +16,38 @@ class SkillSeeder extends Seeder
     {
         $skillsArray = [
             [
-                'name' => 'Javascript',
+                'name' => $name = 'Javascript',
+                'slug' => \Str::slug( $name ),
                 'category' => 'programming',
                 'expertise' => '{"designer": 1,"developer": 1}'
             ],
             [
-                'name' => 'Python',
+                'name' => $name = 'Python',
+                'slug' => \Str::slug( $name ),
                 'category' => 'programming',
                 'expertise' => '{"designer": 1,"developer": 1}'
             ],
             [
-                'name' => 'PHP',
+                'name' => $name = 'PHP',
+                'slug' => \Str::slug( $name ),
                 'category' => 'programming',
                 'expertise' => '{"designer": 1,"developer": 1}'
             ],
             [
-                'name' => 'HTML',
+                'name' => $name = 'HTML',
+                'slug' => \Str::slug( $name ),
                 'category' => 'programming',
                 'expertise' => '{"designer": 1,"developer": 1, "motion": 1}'
             ],
             [
-                'name' => 'CSS',
+                'name' => $name = 'CSS',
+                'slug' => \Str::slug( $name ),
                 'category' => 'programming',
                 'expertise' => '{"designer": 1,"developer": 1, "motion": 1}'
             ],
             [
-                'name' => 'Java',
+                'name' => $name = 'Java',
+                'slug' => \Str::slug( $name ),
                 'category' => 'programming',
                 'expertise' => '{"designer": 1,"developer": 1}'
             ],
